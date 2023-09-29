@@ -2,10 +2,12 @@
 system_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/system.log
 
 # Input and Output
+json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json
 unified_merged_file_cz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_cz_database.csv
 unified_merged_file_noncz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_noncz_database.csv
 unified_merged_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.csv
 data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
+
 
 
 
