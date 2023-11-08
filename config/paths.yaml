@@ -3,6 +3,11 @@ system_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-projec
 
 # Input and Output
 json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json
+train_val_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/train_validation.json
+heldout_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/heldout.json
+unused_after_heldout_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/unused_after_held_out.json
+
+
 unified_merged_file_cz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_cz_database.csv
 unified_merged_file_noncz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_noncz_database.csv
 unified_merged_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.csv
