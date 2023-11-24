@@ -1,5 +1,12 @@
 # Logs
 system_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/system.log
+logreg_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/logistic_regression.log
+lasso_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/lasso.log
+
+
+# Output results
+logreg_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/logistic_regression.csv
+
 
 # Input and Output
 json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json
