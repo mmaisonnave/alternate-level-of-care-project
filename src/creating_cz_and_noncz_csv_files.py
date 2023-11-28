@@ -265,8 +265,9 @@ if __name__=='__main__':
                         'Patient Age:': 'int', 
                         'ALCDays':'int',
                         'Acute Days': 'int',
-                        }) 
-
+                        })
+    
+    logging.debug('Displaying first item:')
     for column,value in zip(newdf.columns, newdf.iloc[0,:]):
         logging.debug(f'{column:20} ({str(type(value)):23}):   {value}')
 
