@@ -1,12 +1,11 @@
 # Logs
 system_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/system.log
 logreg_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/logistic_regression.log
-lasso_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/lasso.log
-
+creating_database_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/creating_database.log
+creating_held_out_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/creating_heldout.log
 
 # Output results
-logreg_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/logistic_regression.csv
-
+logreg_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/logistic_regression.csv
 
 # Input and Output
 json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json
@@ -14,14 +13,10 @@ train_val_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged
 heldout_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/heldout.json
 unused_after_heldout_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/unused_after_held_out.json
 
-
 unified_merged_file_cz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_cz_database.csv
 unified_merged_file_noncz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_noncz_database.csv
 unified_merged_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.csv
 data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
-
-
-
 
 # Only input
 cz_files:
