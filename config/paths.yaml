@@ -6,6 +6,9 @@ creating_held_out_log: /Users/marianomaisonnave/Repositories/alternate-level-of-
 
 # Output results
 logreg_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/logistic_regression.csv
+logreg_latex: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/logistic_regression.tex
+latex_tables: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/tables.tex
+figures_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/figures/
 
 # Input and Output
 json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json

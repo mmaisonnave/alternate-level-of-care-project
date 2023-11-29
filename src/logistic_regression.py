@@ -2,6 +2,7 @@ import argparse
 import os
 import numpy as np
 import pandas as pd
+import re
 import sys
 sys.path.append('..')
 from utilities import logger
@@ -183,7 +184,9 @@ if __name__ == '__main__':
     y_score= clf.predict_proba(X_train)
 
     model_name = str(clf)
-    columns = ['Model','params','split','TN','FP','FN','TP','Precision','Recall','F1-Score','AUC']
+    columns = ['Model','split','TN','FP','FN','TP','Precision','Recall','F1-Score','AUC']
+    param_names  = [key for key in params.keys()]
+    columns = columns[0:1] + param_names + columns[1:]
     str_ = ';'.join(columns)
     logging.debug(str_)
 
@@ -194,7 +197,6 @@ if __name__ == '__main__':
 
 
     vec1 = [model_name,
-            str(params),
             'TRAIN',
             tn,
             fp,
@@ -205,6 +207,7 @@ if __name__ == '__main__':
             f1_score(y_true, y_pred,),
             roc_auc_score(y_true=y_true, y_score=y_pred),
             ]
+    vec1 = vec1[0:1] + [params[param_name] for param_name in param_names] + vec1[1:]
 
     y_true = y_test
     y_pred = clf.predict(X_test)
@@ -216,7 +219,6 @@ if __name__ == '__main__':
     logging.debug(str_)                         
 
     vec2 = [model_name,
-            str(params),
             'TEST',
             tn,
             fp,
@@ -227,7 +229,7 @@ if __name__ == '__main__':
             f1_score(y_true, y_pred,),
             roc_auc_score(y_true=y_true, y_score=y_pred),
             ]
-
+    vec2 = vec2[0:1] + [params[param_name] for param_name in param_names] + vec2[1:]
     m = np.vstack([vec1, vec2])
     df = pd.DataFrame(m, columns=columns)
 
@@ -236,4 +238,26 @@ if __name__ == '__main__':
         df = pd.concat([old_df,df])
 
     df.to_csv(config['logreg_results'], index=False, sep=';')
+
+    # Using the last version from disk (I read everythin again because the 
+    # last row it is displayed diferently if I don't)
+    df = pd.read_csv(config['logreg_results'], sep=';')
+
+    latex_df = df.drop(columns=['fix_missing_in_testing', 'class_balanced','Model', ])
+    latex_df = latex_df[latex_df['split']=='TEST']
+    latex_df = latex_df.drop(columns=['split', ])
+
+    latex_df = latex_df.rename(columns={"fix_skew": "Fix Skew", 
+                                        "normalize": "Normalize",
+                                        "numerical_features": "Numerical Features",
+                                        "categorical_features": "Categorical Features",
+                                        "diagnosis_features": "Diagnoses",
+                                        "intervention_features": "Interventions",
+                                        "use_idf": "Use IDF",
+                                        "remove_outliers": "Remove Outliers",
+                                        })
+    # latex_df.columns = [elem.replace('_','\\_') for elem in latex_df.columns]
+    # latex_df['Model'] = [re.sub('\(.*\)','',model_name) for model_name in latex_df['Model'] ]
+    
+    latex_df.to_latex(config['logreg_latex'],float_format=f"{{:0.3f}}".format, index=False)
     logging.debug('Finishing Logistic Regression execution\n')
