@@ -1,5 +1,13 @@
 """
-This script ...
+This script creates:
+ - A three crosstab table using categorical variables (output: config['latex_tables'])
+ - A matix plot of the numerical variables            (output: three png at config['figures_folder'])
+ - A categorical variable description table           (output: config['latex_tables'])
+ - A numerical variable description table             (output: config['latex_tables'])
+
+The input for all is the training and testing data:
+ - training ,testing = health_data.Admission.get_training_testing_data(filtering=True)
+
 """
 import pandas as pd
 import numpy as np
@@ -10,12 +18,117 @@ sys.path.append('..')
 from utilities import logger
 from utilities import configuration
 from utilities import health_data
+from utilities import formatting
 import matplotlib.patches as mpatches
 from pandas.plotting import scatter_matrix
 import matplotlib.pyplot as plt
 import os
 
 from scipy import stats
+
+
+# ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- 
+# ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- 
+def list_variable_description(training, testing, logging, config):
+    field_names = ['Diagnosis Texts',
+                   'Diagnosis Codes',
+                   'Diagnosis Types',
+                   'Intervention Codes',
+                   'Intervention Texts',
+                   ]
+    data = {'Avg Length': [],
+            'Min': [],
+            'Max': [],
+            'Unique': [],
+            'Unique (in training)': [],
+            'Mode': [],
+            'Mode Count': [],
+            'Less Frequent': [],
+            'Less Frequent Count': [],
+            r'\% Empty ': [],
+            }
+
+    for list_of_lists in [[admission.diagnosis.texts for admission in training + testing],
+                          [admission.diagnosis.codes for admission in training + testing],
+                          [admission.diagnosis.types for admission in training + testing],
+                          [admission.intervention_code for admission in training + testing],
+                          [admission.px_long_text for admission in training + testing],
+                          ]:
+        data['Avg Length'].append(np.average([len(list_) for list_ in list_of_lists]))
+        data['Min'].append(np.min([len(list_) for list_ in list_of_lists]))
+        data['Max'].append(np.max([len(list_) for list_ in list_of_lists]))
+        data['Unique'].append(len(set([elem.lower() for list_ in list_of_lists for elem in list_])))
+        data[r'\% Empty '].append(100*(len([list_ for list_ in list_of_lists if len(list_)==0])/len(list_of_lists)))
+
+        all_elements = [elem.lower() for list_ in list_of_lists for elem in list_]
+        data['Mode'].append(pd.Series(all_elements).mode()[0])
+        data['Mode Count'].append(len([elem for elem in all_elements if elem==data['Mode'][-1]]))
+
+        freq = defaultdict(int)
+        for elem in [elem.lower() for list_ in list_of_lists for elem in list_]:
+            freq[elem]+=1
+
+        data['Less Frequent'].append(sorted(freq.items(), key=lambda key_value: key_value[1])[0][0])
+        data['Less Frequent Count'].append(sorted(freq.items(), key=lambda key_value: key_value[1])[0][1])
+
+    for list_of_lists in [[admission.diagnosis.texts for admission in training ],
+                          [admission.diagnosis.codes for admission in training ],
+                          [admission.diagnosis.types for admission in training ],
+                          [admission.intervention_code for admission in training ],
+                          [admission.px_long_text for admission in training ],
+                          ]:
+        data['Unique (in training)'].append(len(set([elem.lower() for list_ in list_of_lists for elem in list_])))
+
+    df = pd.DataFrame(data, index=field_names)
+
+    with open(config['latex_tables'], 'a') as writer:
+        writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+        writer.write('==========                                LIST VAR TABLE                     ==========\n')
+        writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+        writer.write('\n')
+        writer.write(formatting.wrap_tabular(
+                        df.to_latex(float_format=f"{{:0.3f}}".format).replace('_','\\_')
+                        ))
+        writer.write('\n')
+
+
+
+
+
+# ########## ########## ########## ########## ########## ########## ########## ##########
+# MISSING ENTRY CODE
+# MISSING NURSE DISCHARGE UNIT
+# MISSING READMISSION CODE
+# ########## ########## ########## ########## ########## ########## ########## ##########
+def crosstabs(training, testing, logging, config):
+
+    categorical_df, _ = health_data.Admission.categorical_features(training)
+    y = health_data.Admission.get_y(training)
+    categorical_df['Target']=y
+
+    range_pairs = [(0,4),(4,8),(8,12)]
+    for begin,end in range_pairs:
+        fields = categorical_df.columns[begin:end]
+
+        df = pd.crosstab(categorical_df['Target'],
+                    [categorical_df[field_name] for field_name in fields], 
+                    colnames=[field_name for field_name in fields], 
+                    )
+
+        df.iloc[0,:] = 100*(df.iloc[0,:]/np.sum(df.iloc[0,:]))
+        df.iloc[1,:] = 100*(df.iloc[1,:]/np.sum(df.iloc[1,:]))
+        df['All']=['100\%','100\%',]
+
+
+        with open(config['latex_tables'], 'a') as writer:
+            writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+            writer.write('==========                                   CROSSTABS                       ==========\n')
+            writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+            writer.write('\n')
+            writer.write(formatting.wrap_tabular(
+                         df.to_latex(float_format=f"{{:0.3f}}".format)
+                         ))
+            writer.write('\n')
 
 
 
@@ -133,37 +246,46 @@ def categorical_variable_description(training, testing, logging, config):
     - latex_tables: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/tables.tex
 
     """
-    fields = ['code',
-            'admit_date',
-            'discharge_date',
-            'gender',
-            'postal_code',
-            'is_central_zone',
-            'institution_number',
-            'institution_to',
-            'institution_from',
-            'institution_type',
-            'admit_category',
-            'readmission_code',
-            'main_pt_service',
-            'mrdx',
-            'transfusion_given',]
+    fields = ['code',                    #1 
+            'admit_date',                #2
+            'discharge_date',            #3
+            'gender',                    #4
+            'is_central_zone',           #5
+            'postal_code',               #6
+            'institution_number',        #7
+            'institution_to',            #8
+            'institution_from',          #9
+            'institution_type',         #10
+            'admit_category',           #11
+            'transfusion_given',        #12
+            'comorbidity_level',        #13
+            'main_pt_service',          #14
+            'discharge_unit',           #15
+            'entry_code',               #16
+            'mrdx',                     #17
+            'readmission_code',         #18
+            ]
+            
     
-    fields_names = ['Code',
-                    'Admit Date',
-                    'Discharge Date',
-                    'Gender',
-                    'Postal Code',
-                    'Central Zone',
-                    'Institution Number',
-                    'Institution To',
-                    'Institution From',
-                    'Institution Type',
-                    'Admit Category',
-                    'ReadmissionC ode',
-                    'Main Pt Service',
-                    'MRDx',
-                    'Transfusion Given',]
+    fields_names = ['Code',                 #1
+                    'Admit Date',           #2
+                    'Discharge Date',       #3
+                    'Gender',               #4
+                    'CZ Status',            #5
+                    'Postal Code',          #6
+                    'Institution Number',   #7
+                    'Institution To',       #8
+                    'Institution From',     #9
+                    'Institution Type',     #10
+                    'Admit Category',       #11
+                    'Transfusion Given',    #12
+                    'Comorbidity Level',    #13
+                    'Main Pt Service',      #14
+                    'Discharge Nurse Unit', #15
+                    'Entry Code',           #16
+                    'MRDx',                 #17
+                    'Readmission Code',     #18
+]
 
     data = {
             'Levels':[],
@@ -189,6 +311,9 @@ def categorical_variable_description(training, testing, logging, config):
         elif field == 'transfusion_given':
             miss_count = len([elem for elem in vector if elem is None or elem==health_data.TransfusionGiven.NONE])
             vector = list(filter(lambda elem: not elem is None and elem!=health_data.TransfusionGiven.NONE  ,vector))
+        elif field == 'entry_code':
+            miss_count = len([elem for elem in vector if elem is None or elem==health_data.EntryCode.NONE])
+            vector = list(filter(lambda elem: not elem is None and elem!=health_data.EntryCode.NONE  ,vector))
         else:
             miss_count = len([elem for elem in vector if elem is None])
             vector = list(filter(lambda elem: not elem is None,vector))
@@ -218,6 +343,9 @@ def categorical_variable_description(training, testing, logging, config):
         elif field == 'transfusion_given':
             miss_count = len([elem for elem in vector if elem is None or elem==health_data.TransfusionGiven.NONE])
             vector = list(filter(lambda elem: not elem is None and elem!=health_data.TransfusionGiven.NONE  ,vector))
+        elif field == 'entry_code':
+            miss_count = len([elem for elem in vector if elem is None or elem==health_data.EntryCode.NONE])
+            vector = list(filter(lambda elem: not elem is None and elem!=health_data.EntryCode.NONE  ,vector))
         else:
             miss_count = len([elem for elem in vector if elem is None])
             vector = list(filter(lambda elem: not elem is None,vector))
@@ -225,8 +353,17 @@ def categorical_variable_description(training, testing, logging, config):
 
     df = pd.DataFrame(data, index=fields_names)
     logging.debug(str(df))
+    # with open(config['latex_tables'], 'a') as writer:
+    #     writer.write(df.to_latex(float_format=f"{{:0.3f}}".format).replace('_','\\_') + '\n')
     with open(config['latex_tables'], 'a') as writer:
-        writer.write(df.to_latex(float_format=f"{{:0.3f}}".format).replace('_','\\_') + '\n')
+        writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+        writer.write('==========                                 CAT VAR TABLE                     ==========\n')
+        writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+        writer.write('\n')
+        writer.write(formatting.wrap_tabular(
+                        df.to_latex(float_format=f"{{:0.3f}}".format).replace('_','\\_')
+                        ))
+        writer.write('\n')
 
 
 # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- 
@@ -241,6 +378,9 @@ def numeric_variable_description(training, testing, logging, config):
     - latex_tables: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/tables.tex
 
     """
+
+    table_begin =  r'\begin{table}[]\centering\resizebox{\textwidth}{!}{'
+    table_end = r'}\caption{Caption}\label{tab:my_label}\end{table}'    
     num_fields = [
             'age',
             'alc_days',
@@ -288,12 +428,20 @@ def numeric_variable_description(training, testing, logging, config):
     df = pd.DataFrame(data, index=field_names)
     logging.debug(str(df))
 
+    # with open(config['latex_tables'], 'a') as writer:
+    #     writer.write(df.to_latex(float_format=f"{{:0.3f}}".format) + '\n')
     with open(config['latex_tables'], 'a') as writer:
-        writer.write(df.to_latex(float_format=f"{{:0.3f}}".format) + '\n')
+        writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+        writer.write('==========                                 NUM VAR TABLE                     ==========\n')
+        writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
+
+        writer.write('\n')
+        writer.write(formatting.wrap_tabular(
+                        df.to_latex(float_format=f"{{:0.3f}}".format)
+                        ))
+        writer.write('\n')
 
 
-
-# def 
 
 if __name__=='__main__':
     params = {'fix_missing_in_testing': True}
@@ -309,6 +457,8 @@ if __name__=='__main__':
             admission.fix_missings(training)
 
 
-    # categorical_variable_description(training, testing, logging, config)
-    # numeric_variable_description(training, testing, logging, config)
+    categorical_variable_description(training, testing, logging, config)
+    numeric_variable_description(training, testing, logging, config)
     # numerical_variables_plots(training, testing, logging, config)
+    crosstabs(training, testing, logging, config)
+    list_variable_description(training, testing, logging, config)
