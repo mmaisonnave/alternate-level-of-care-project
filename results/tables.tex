@@ -1,0 +1,130 @@
+========== ========== ========== ========== ========== ========== ========== ==========
+==========                                 CAT VAR TABLE                     ==========
+========== ========== ========== ========== ========== ========== ========== ==========
+
+\begin{table}[!ht]
+\centering\resizebox{\textwidth}{!}{
+\begin{tabular}{lrrlrlrr}
+\toprule
+ & Levels & Levels (in training) & Mode & Mode Count & Less Frequent & Less Frequent Count & Missings (\%) \\
+\midrule
+Encoded HCN & 263631 & 230674 & 170806 & 1022 & 4584715 & 1 & 0.000 \\
+Admit Date & 2743 & 2717 & 2019-09-24 00:00:00 & 314 & 2014-03-26 00:00:00 & 1 & 0.000 \\
+Discharge Date & 2466 & 2466 & 2015-04-02 00:00:00 & 362 & 2017-12-25 00:00:00 & 59 & 0.000 \\
+Gender & 3 & 3 & Female & 269931 & Gender:Other & 9 & 0.000 \\
+CZ Status & 2 & 2 & False & 306328 & True & 217695 & 0.000 \\
+Postal Code & 32613 & 30652 & B0P1R0 & 5160 & B2N7H9 & 1 & 0.000 \\
+Institution Number & 34 & 33 & 85 & 172834 & 58 & 10 & 0.000 \\
+Institution To & 249 & 244 & HOME CARE SERVICES-HOM... & 19320 & South Cumberland Hospital & 1 & 70.622 \\
+Institution From & 289 & 286 & 29087 & 15832 & ST. MARTHA'S REGIONAL ... & 1 & 68.530 \\
+Institution Type & 28 & 28 & OTHER (9002,9003,9088,... & 20583 & NACRS AMBULATORY CARE (9) & 1 & 85.161 \\
+Admit Category & 3 & 3 & Urgent admit & 363642 & Newborn admit & 23829 & 0.000 \\
+Transfusion Given & 2 & 2 & No & 484324 & Yes & 39699 & 0.000 \\
+Comorbidity Level & 7 & 6 & No Comorbidity & 339518 &  & 23 & 0.000 \\
+Main Pt Service & 51 & 49 & General Medicine & 115067 & Paediatric Endocrinology & 1 & 0.000 \\
+Discharge Nurse Unit & 153 & 147 & D34 & 11879 & v6w & 1 & 41.272 \\
+Entry Code & 5 & 5 & Emergency Entry & 272522 & Day Surgery Entry & 11481 & 0.000 \\
+MRDx & 6453 & 6120 & I214  Acute subendocar... & 16387 & C438  Overlapping mali... & 1 & 0.000 \\
+Readmission Code & 6 & 6 & ReadmissionCode:Other & 212966 & Unplanned from SDS & 6968 & 0.000 \\
+\bottomrule
+\end{tabular}
+}\caption{Caption}\label{tab:my_label}
+\end{table}
+========== ========== ========== ========== ========== ========== ========== ==========
+==========                                 NUM VAR TABLE                     ==========
+========== ========== ========== ========== ========== ========== ========== ==========
+
+\begin{table}[!ht]
+\centering\resizebox{\textwidth}{!}{
+\begin{tabular}{lrrrrrrrrrrrr}
+\toprule
+ & Mean & Std & Min & Q1 & Median & Q3 & Max & Kurtosis & Skew & Mode & Mode Count & Missing Count (\%) \\
+\midrule
+Age & 58.720 & 23.540 & -1.000 & 46.000 & 64.000 & 76.000 & 110.000 & 0.126 & -0.867 & 0.000 & 26192 & 0.000 \\
+ALC Days & 1.831 & 29.951 & 0.000 & 0.000 & 0.000 & 0.000 & 16300.000 & 169867.239 & 327.838 & 0.000 & 506177 & 0.000 \\
+Acute Days & 8.364 & 37.494 & 0.000 & 2.000 & 4.000 & 8.000 & 17343.000 & 109751.599 & 273.665 & 1.000 & 102153 & 0.000 \\
+Case Mix Group & 411.392 & 245.462 & 1.000 & 196.000 & 337.000 & 635.000 & 999.000 & -1.263 & 0.270 & 139.000 & 16206 & 0.000 \\
+Case Weight & 1.792 & 5.968 & 0.000 & 0.537 & 0.923 & 1.618 & 2000.000 & 48866.216 & 164.373 & 1.118 & 2183 & 0.000 \\
+\bottomrule
+\end{tabular}
+}\caption{Caption}\label{tab:my_label}
+\end{table}
+========== ========== ========== ========== ========== ========== ========== ==========
+==========                                   CROSSTABS                       ==========
+========== ========== ========== ========== ========== ========== ========== ==========
+
+\begin{table}[!ht]
+\centering\resizebox{\textwidth}{!}{
+\begin{tabular}{lrrrrrrrrrl}
+\toprule
+male & \multicolumn{5}{r}{0} & \multicolumn{4}{r}{1} & All \\
+female & 0 & \multicolumn{4}{r}{1} & \multicolumn{4}{r}{0} &  \\
+transfusion given & 0 & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{1} & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{1} &  \\
+is alc & 0 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 &  \\
+Target &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+0 & 0.002 & 46.376 & 1.792 & 3.349 & 0.156 & 42.985 & 1.426 & 3.807 & 0.108 & 100\% \\
+1 & 0.000 & 41.461 & 0.759 & 5.557 & 0.103 & 45.558 & 0.598 & 5.936 & 0.029 & 100\% \\
+\bottomrule
+\end{tabular}
+}\caption{Caption}\label{tab:my_label}
+\end{table}
+========== ========== ========== ========== ========== ========== ========== ==========
+==========                                   CROSSTABS                       ==========
+========== ========== ========== ========== ========== ========== ========== ==========
+
+\begin{table}[!ht]
+\centering\resizebox{\textwidth}{!}{
+\begin{tabular}{lrrrrrrrrrrrrl}
+\toprule
+is central zone & \multicolumn{6}{r}{0} & \multicolumn{6}{r}{1} & All \\
+elective admission & \multicolumn{4}{r}{0} & \multicolumn{2}{r}{1} & \multicolumn{4}{r}{0} & \multicolumn{2}{r}{1} &  \\
+urgent admission & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{1} & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{1} & \multicolumn{2}{r}{0} &  \\
+level 1 comorbidity & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 &  \\
+Target &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+\midrule
+0 & 4.382 & 0.303 & 24.497 & 14.071 & 13.477 & 1.908 & 0.003 & 0.000 & 16.731 & 13.359 & 9.355 & 1.915 & 100\% \\
+1 & 0.839 & 0.126 & 28.801 & 19.337 & 4.465 & 1.563 & 0.006 & 0.000 & 18.584 & 19.228 & 5.091 & 1.960 & 100\% \\
+\bottomrule
+\end{tabular}
+}\caption{Caption}\label{tab:my_label}
+\end{table}
+========== ========== ========== ========== ========== ========== ========== ==========
+==========                                   CROSSTABS                       ==========
+========== ========== ========== ========== ========== ========== ========== ==========
+
+\begin{table}[!ht]
+\centering\resizebox{\textwidth}{!}{
+\begin{tabular}{lrrrrrrrrl}
+\toprule
+level 2 comorbidity & \multicolumn{2}{r}{0} & \multicolumn{6}{r}{1} & All \\
+level 3 comorbidity & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{0} & \multicolumn{4}{r}{1} &  \\
+level 4 comorbidity & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{0} & \multicolumn{2}{r}{1} &  \\
+Clinic Entry & 0 & 1 & 0 & 1 & 0 & 1 & 0 & 1 &  \\
+Target &  &  &  &  &  &  &  &  &  \\
+\midrule
+0 & 76.279 & 3.134 & 9.296 & 0.259 & 6.307 & 0.122 & 4.533 & 0.071 & 100\% \\
+1 & 71.227 & 2.063 & 13.027 & 0.345 & 8.258 & 0.230 & 4.735 & 0.115 & 100\% \\
+\bottomrule
+\end{tabular}
+}\caption{Caption}\label{tab:my_label}
+\end{table}
+========== ========== ========== ========== ========== ========== ========== ==========
+==========                                LIST VAR TABLE                     ==========
+========== ========== ========== ========== ========== ========== ========== ==========
+
+\begin{table}[!ht]
+\centering\resizebox{\textwidth}{!}{
+\begin{tabular}{lrrrrrlrlrr}
+\toprule
+ & Avg Length & Min & Max & Unique & Unique (in training) & Mode & Mode Count & Less Frequent & Less Frequent Count & \% Empty  \\
+\midrule
+Diagnosis Texts & 4.452 & 0 & 50 & 9907 & 9537 & benign hypertension & 79878 & fracture of acromial p... & 1 & 0.004 \\
+Diagnosis Codes & 4.452 & 0 & 50 & 9921 & 9545 & i100 & 79878 & s42101 & 1 & 0.004 \\
+Diagnosis Types & 4.452 & 0 & 50 & 12 & 11 & 3 & 741855 & 4 & 1 & 0.009 \\
+Intervention Codes & 1.096 & 0 & 50 & 7973 & 7519 & 3ip10vx & 22666 & 1ta74danw & 1 & 50.434 \\
+Intervention Texts & 1.096 & 0 & 50 & 7773 & 7350 & xray, heart with coron... & 22664 & repair, tendons of the... & 1 & 50.434 \\
+\bottomrule
+\end{tabular}
+}\caption{Caption}\label{tab:my_label}
+\end{table}

@@ -1,15 +1,18 @@
 # Logs
 system_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/system.log
 logreg_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/logistic_regression.log
+nn_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/neural_networks.log
 creating_database_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/creating_database.log
 creating_held_out_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/creating_heldout.log
 building_diag_interv_map_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/building_diag_interv_map.log
+all_experiments_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/all_experiments.log
 
 # Output results
 logreg_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/logistic_regression.csv
 logreg_latex: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/logistic_regression.tex
 latex_tables: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/tables.tex
 figures_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/figures/
+experiment_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/experiments_results.csv
 
 # Input and Output
 json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json
@@ -28,6 +31,9 @@ diagnosis_dict: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged
 intervention_dict: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/intervention_dict.json 
 
 # Only input
+experiments_config: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/config/experiment_configuration.json
+models_config: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/config/models.json
+
 cz_files:
  - 2015/ALC Machine 2015Q1 - coded HCN.csv
  - 2015/ALC Machine 2015Q2 - coded HCN.csv

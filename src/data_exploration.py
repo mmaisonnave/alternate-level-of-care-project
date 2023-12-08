@@ -81,6 +81,10 @@ def list_variable_description(training, testing, logging, config):
 
     df = pd.DataFrame(data, index=field_names)
 
+
+    df['Mode'] = [elem if len(str(elem))<=25 else str(elem)[:22]+'...' for elem in df['Mode']]
+    df['Less Frequent'] = [elem if len(str(elem))<=25 else str(elem)[:22]+'...' for elem in df['Less Frequent']]
+
     with open(config['latex_tables'], 'a') as writer:
         writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
         writer.write('==========                                LIST VAR TABLE                     ==========\n')
@@ -267,7 +271,7 @@ def categorical_variable_description(training, testing, logging, config):
             ]
             
     
-    fields_names = ['Code',                 #1
+    fields_names = ['Encoded HCN',                 #1
                     'Admit Date',           #2
                     'Discharge Date',       #3
                     'Gender',               #4
@@ -355,6 +359,10 @@ def categorical_variable_description(training, testing, logging, config):
     logging.debug(str(df))
     # with open(config['latex_tables'], 'a') as writer:
     #     writer.write(df.to_latex(float_format=f"{{:0.3f}}".format).replace('_','\\_') + '\n')
+
+
+    df['Mode'] = [elem if len(str(elem))<=25 else str(elem)[:22]+'...' for elem in df['Mode']]
+    df['Less Frequent'] = [elem if len(str(elem))<=25 else str(elem)[:22]+'...' for elem in df['Less Frequent']]
     with open(config['latex_tables'], 'a') as writer:
         writer.write('========== ========== ========== ========== ========== ========== ========== ==========\n')
         writer.write('==========                                 CAT VAR TABLE                     ==========\n')

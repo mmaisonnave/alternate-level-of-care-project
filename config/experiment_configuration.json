@@ -1,0 +1,12 @@
+{"configuration_0": {
+    "fix_skew": false,
+    "normalize": false,
+    "fix_missing_in_testing": true,
+    "numerical_features": true,
+    "categorical_features": true,
+    "diagnosis_features": true,
+    "intervention_features": true,
+    "use_idf": false,
+    "class_balanced": false,
+    "remove_outliers": true
+}}
