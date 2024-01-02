@@ -25,76 +25,84 @@ then
     exit 1
 fi
 
-# Only numeric
-python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced
-python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced --normalize
-python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced --normalize --fix-skew 
-python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced --normalize --fix-skew --remove-outliers
+# # Only numeric
+# python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced
+# python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced --normalize
+# python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced --normalize --fix-skew 
+# python $PYTHON_SCRIPT --numerical-features --fix-missings --class-balanced --normalize --fix-skew --remove-outliers
 
-# Only categorical
-python $PYTHON_SCRIPT --categorical-features  --fix-missings --class-balanced
+# # Only categorical
+# python $PYTHON_SCRIPT --categorical-features  --fix-missings --class-balanced
 
-# Only diagnosis
-python $PYTHON_SCRIPT --diagnosis-features    --fix-missings --class-balanced --use-idf
+# # Only diagnosis
+# python $PYTHON_SCRIPT --diagnosis-features    --fix-missings --class-balanced --use-idf
 
-# Only interventions
-python $PYTHON_SCRIPT --intervention-features --fix-missings --class-balanced --use-idf
+# # Only interventions
+# python $PYTHON_SCRIPT --intervention-features --fix-missings --class-balanced --use-idf
 
-# ALL
-python $PYTHON_SCRIPT --categorical-features\
-                      --numerical-features\
-                      --diagnosis-features\
-                      --intervention-features\
-                      --fix-missings\
-                      --class-balanced\
-                      --normalize\
-                      --fix-skew\
-                      --use-idf\
-                      --remove-outliers
+# # ALL
+# python $PYTHON_SCRIPT --categorical-features\
+#                       --numerical-features\
+#                       --diagnosis-features\
+#                       --intervention-features\
+#                       --fix-missings\
+#                       --class-balanced\
+#                       --normalize\
+#                       --fix-skew\
+#                       --use-idf\
+#                       --remove-outliers
 
-# ALL Except IDF
-python $PYTHON_SCRIPT --categorical-features\
-                      --numerical-features\
-                      --diagnosis-features\
-                      --intervention-features\
-                      --fix-missings\
-                      --class-balanced\
-                      --normalize\
-                      --fix-skew\
-                      --remove-outliers
+# # ALL Except IDF
+# python $PYTHON_SCRIPT --categorical-features\
+#                       --numerical-features\
+#                       --diagnosis-features\
+#                       --intervention-features\
+#                       --fix-missings\
+#                       --class-balanced\
+#                       --normalize\
+#                       --fix-skew\
+#                       --remove-outliers
 
-# ALL Except fix skew
-python $PYTHON_SCRIPT --categorical-features\
-                      --numerical-features\
-                      --diagnosis-features\
-                      --intervention-features\
-                      --fix-missings\
-                      --class-balanced\
-                      --normalize\
-                      --use-idf\
-                      --remove-outliers
+# # ALL Except fix skew
+# python $PYTHON_SCRIPT --categorical-features\
+#                       --numerical-features\
+#                       --diagnosis-features\
+#                       --intervention-features\
+#                       --fix-missings\
+#                       --class-balanced\
+#                       --normalize\
+#                       --use-idf\
+#                       --remove-outliers
 
-# ALl except normalzie
-python $PYTHON_SCRIPT --categorical-features\
-                      --numerical-features\
-                      --diagnosis-features\
-                      --intervention-features\
-                      --fix-missings\
-                      --class-balanced\
-                      --fix-skew\
-                      --use-idf\
-                      --remove-outliers
+# # ALl except normalzie
+# python $PYTHON_SCRIPT --categorical-features\
+#                       --numerical-features\
+#                       --diagnosis-features\
+#                       --intervention-features\
+#                       --fix-missings\
+#                       --class-balanced\
+#                       --fix-skew\
+#                       --use-idf\
+#                       --remove-outliers
 
-# ALL except remove outliers
-python $PYTHON_SCRIPT --categorical-features\
-                      --numerical-features\
-                      --diagnosis-features\
-                      --intervention-features\
-                      --fix-missings\
-                      --class-balanced\
-                      --normalize\
-                      --fix-skew\
-                      --use-idf\
+# # ALL except remove outliers
+# python $PYTHON_SCRIPT --categorical-features\
+#                       --numerical-features\
+#                       --diagnosis-features\
+#                       --intervention-features\
+#                       --fix-missings\
+#                       --class-balanced\
+#                       --normalize\
+#                       --fix-skew\
+#                       --use-idf\
+
+# # All features, no transformation
+# python $PYTHON_SCRIPT --categorical-features\
+#                       --numerical-features\
+#                       --diagnosis-features\
+#                       --intervention-features\
+#                       --fix-missings\
+#                       --class-balanced
 
 # All features, no transformation
 python $PYTHON_SCRIPT --categorical-features\
@@ -102,8 +110,8 @@ python $PYTHON_SCRIPT --categorical-features\
                       --diagnosis-features\
                       --intervention-features\
                       --fix-missings\
+                      --use-idf\
                       --class-balanced
-
 
 
 
