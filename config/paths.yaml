@@ -14,6 +14,13 @@ latex_tables: /Users/marianomaisonnave/Repositories/alternate-level-of-care-proj
 figures_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/figures/
 experiment_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/experiments_results.csv
 
+# Gensim
+gensim_model_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/gensim/models/
+gensim_results_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/gensim/results/
+gensim_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/gensim.log
+gensim_config: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/config/gensim.json
+
+
 # Input and Output
 json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json
 train_val_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/train_validation.json

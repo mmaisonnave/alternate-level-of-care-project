@@ -1,3 +1,17 @@
+"""
+This is an outdated scripts that only run logistic regression experiments. 
+
+It relies on the get_training_testing_data methods from the health_data.Admissions python module.
+The matrices are computed from the training and testing admissions list (this is outdated, now the matrices 
+can be obtained using the get_train_test_matrices methods from health_data.Admissions module). 
+
+Log information is stored in: log/logistic_regression.log
+Results are stored in: results/logistic_regression.csv
+Results in latex format are stored in: results/logistic_regression.tex
+
+Several parameter configurations can be tuned through command arguments (argparse)
+
+"""
 import argparse
 import os
 import numpy as np

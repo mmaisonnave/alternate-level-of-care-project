@@ -1,3 +1,23 @@
+"""
+This script has two main methods:
+    - build_intervention_dict and
+    - build_diagnosis_dict
+
+The main method loads all the admissions in our dataset, and invokes both methods to generate two mappings. 
+
+The first mapping (build_intervention_dict) maps every intervention code in our data to 
+its description (also found in our data)
+
+The second mapping (build_diagnosis_dict) maps every diagnoses code in our data to 
+its description (also found in our data)
+
+Its read the data from the full JSON file (full_database.json). 
+
+Its stores the results in the following two files:
+ - Merged/2015_2022/diagnosis_dict.json
+ - Merged/2015_2022/intervention_dict.json
+
+"""
 import argparse
 import json
 
