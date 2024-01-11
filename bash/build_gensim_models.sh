@@ -1,10 +1,26 @@
+#!/bin/bash
+#SBATCH --time=8:00:0
+#SBATCH --account=def-erajabi
+#SBATCH --ntasks=1 
+#SBATCH --nodes=1 
+#SBATCH --mem=8GB 
+#SBATCH --cpus-per-task=1 
+#SBATCH --job-name=build_gensim_models
+#SBATCH --output=/home/maiso/cbu/slurm/output/%x-%j.out
+
+echo Running script at $(pwd)
+
 ENV=alc
-REPOSITORY_PATH=/Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
+REPOSITORY_PATH=$(cat ../config/paths.yaml | grep repository\_path: | grep -v ^# | sed 's/^repository\_path:\ //g')
 PYTHON_SCRIPTS_FOLDER=src
 PYTHON_SCRIPT_NAME=build_gensim_models.py
 
 PYTHON_SCRIPT=$REPOSITORY_PATH/$PYTHON_SCRIPTS_FOLDER/$PYTHON_SCRIPT_NAME
 
+
+echo $(date) - Running python file: $PYTHON_SCRIPT
+echo $(date) - Using python: $(python --version)
+echo $(date) - Which python: $(which python)
 
 # IF PYTHON SCRIPT NOT FOUND, EXIT
 if [ ! -f $PYTHON_SCRIPT ]; then

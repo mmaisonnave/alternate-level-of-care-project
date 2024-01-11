@@ -162,4 +162,5 @@ cython_debug/
 
 figures/
 gensim/
+config/alc.key
 .DS_Store

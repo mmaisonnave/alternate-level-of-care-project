@@ -1,45 +1,61 @@
-# Logs
-system_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/system.log
-logreg_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/logistic_regression.log
-nn_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/neural_networks.log
-creating_database_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/creating_database.log
-creating_held_out_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/creating_heldout.log
-building_diag_interv_map_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/building_diag_interv_map.log
-all_experiments_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/all_experiments.log
+# ----------- #
+# MAIN PATHS: #
+# ----------- #
+# repository_path: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
+# data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/
+repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
+data_path: /home/maiso/cbu/data
+# ---
+
+
+# LOG
+system_log: ["$repository_path", "log/system.log"]
+logreg_log: ["$repository_path", "log/logistic_regression.log"]
+nn_log: ["$repository_path", "log/neural_networks.log"]
+creating_database_log: ["$repository_path", "log/creating_database.log"]
+creating_held_out_log: ["$repository_path", "log/creating_heldout.log"]
+building_diag_interv_map_log: ["$repository_path", "log/building_diag_interv_map.log"]
+all_experiments_log: ["$repository_path", "log/all_experiments.log"]
+
 
 # Output results
-logreg_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/logistic_regression.csv
-logreg_latex: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/logistic_regression.tex
-latex_tables: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/tables.tex
-figures_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/figures/
-experiment_results: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/results/experiments_results.csv
+logreg_results: ["$repository_path", "results/logistic_regression.csv"]
+logreg_latex: ["$repository_path", "results/logistic_regression.tex"]
+latex_tables: ["$repository_path", "results/tables.tex"]
+figures_folder: ["$repository_path", "figures/"]
+experiment_results: ["$repository_path", "results/experiments_results.csv"]
 
 # Gensim
-gensim_model_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/gensim/models/
-gensim_results_folder: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/gensim/results/
-gensim_log: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/log/gensim.log
-gensim_config: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/config/gensim.json
+gensim_model_folder: ["$repository_path", "gensim/models/"]
+gensim_results_folder: ["$repository_path", "gensim/results/"]
+gensim_log: ["$repository_path", "log/gensim.log"]
+gensim_config: ["$repository_path", "config/gensim.json"]
 
 
 # Input and Output
-json_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.json
-train_val_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/train_validation.json
-heldout_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/heldout.json
-unused_after_heldout_json: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/unused_after_held_out.json
+
+json_file: ["$data_path", "2015_2022/full_database.json"]
+train_val_json: ["$data_path", "2015_2022/train_validation.json"]
+heldout_json: ["$data_path", "2015_2022/heldout.json"]
+unused_after_heldout_json: ["$data_path", "2015_2022/unused_after_held_out.json"]
+encrypted_train_val_json: ["$data_path", "2015_2022/train_validation.json.encryption"]
 
 
-unified_merged_file_cz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_cz_database.csv
-unified_merged_file_noncz: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_noncz_database.csv
-unified_merged_file: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/full_database.csv
-data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
+unified_merged_file_cz: ["$data_path", "2015_2022/full_cz_database.csv"]
+unified_merged_file_noncz: ["$data_path", "2015_2022/full_noncz_database.csv"]
+unified_merged_file: ["$data_path", "2015_2022/full_database.csv"]
+
 
 # Only output:
-diagnosis_dict: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/diagnosis_dict.json
-intervention_dict: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/2015_2022/intervention_dict.json 
+diagnosis_dict: ["$data_path", "2015_2022/diagnosis_dict.json"]
+intervention_dict: ["$data_path", "2015_2022/intervention_dict.json"]
+
 
 # Only input
-experiments_config: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/config/experiment_configuration.json
-models_config: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/config/models.json
+keyfile: ["$repository_path", "config/alc.key"]
+
+experiments_config: ["$repository_path", "config/experiment_configuration.json"]
+models_config: ["$repository_path", "config/models.json"]
 
 cz_files:
  - 2015/ALC Machine 2015Q1 - coded HCN.csv

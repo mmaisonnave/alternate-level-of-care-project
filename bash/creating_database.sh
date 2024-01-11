@@ -1,5 +1,5 @@
 ENV=alc
-REPOSITORY_PATH=/Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
+REPOSITORY_PATH=$(cat ../config/paths.yaml | grep repository\_path: | grep -v ^# | sed 's/^repository\_path:\ //g')
 BASH_SCRIPTS_FOLDER=src
 SCRIPT1_CREATE_TWO_CSV=creating_cz_and_noncz_csv_files.py
 SCRIPT2_CREATE_ONE_CSV=creating_single_csv.py

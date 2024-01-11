@@ -1,5 +1,15 @@
+#!/bin/bash
+#SBATCH --time=8:00:0
+#SBATCH --account=def-erajabi
+#SBATCH --ntasks=1 
+#SBATCH --nodes=1 
+#SBATCH --mem=8GB 
+#SBATCH --cpus-per-task=1 
+#SBATCH --job-name=running_all_experiments
+#SBATCH --output=/home/maiso/cbu/slurm/output/%x-%j.out
+
 ENV=alc
-REPOSITORY_PATH=/Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
+REPOSITORY_PATH=$(cat ../config/paths.yaml | grep repository\_path: | grep -v ^# | sed 's/^repository\_path:\ //g')
 BASH_SCRIPTS_FOLDER=src
 SCRIPT_NAME=running_all_experiments.py
 
