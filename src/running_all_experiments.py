@@ -61,10 +61,13 @@ if __name__ == '__main__':
 
     to_do = set(to_do)
 
-    already_run_df = pd.read_csv(config['experiment_results'], sep=';')
+    
+    already_ran = {}
+    if os.path.isfile(config['experiment_results']):
+        already_run_df = pd.read_csv(config['experiment_results'], sep=';')
 
-    already_ran = [(config_id, model_id) for config_id, model_id in zip(already_run_df['config_id'], already_run_df['model_id'])]
-    already_ran = set(already_ran)
+        already_ran = [(config_id, model_id) for config_id, model_id in zip(already_run_df['config_id'], already_run_df['model_id'])]
+        already_ran = set(already_ran)
 
     pending = to_do.difference(already_ran)
     pending_conf = set([config_id for config_id, model_id in pending])
@@ -97,8 +100,6 @@ if __name__ == '__main__':
         logging.debug(f'y_train.shape = {y_train.shape}')
         logging.debug(f'X_train.shape = {X_test.shape}')
         logging.debug(f'y_train.shape = {y_test.shape}')
-
-
 
 
         # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------

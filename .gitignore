@@ -164,3 +164,4 @@ figures/
 gensim/
 config/alc.key
 .DS_Store
+notebooks/26. Analyzing patients.ipynb

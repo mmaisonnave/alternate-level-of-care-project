@@ -1,5 +1,5 @@
 #!/bin/bash
-#SBATCH --time=8:00:0
+#SBATCH --time=24:00:0
 #SBATCH --account=def-erajabi
 #SBATCH --ntasks=1 
 #SBATCH --nodes=1 

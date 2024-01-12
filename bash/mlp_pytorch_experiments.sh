@@ -1,24 +1,32 @@
 #!/bin/bash
-#SBATCH --time=24:00:0
+#SBATCH --time=0:30:0
 #SBATCH --account=def-erajabi
 #SBATCH --ntasks=1 
 #SBATCH --nodes=1 
-#SBATCH --mem=16GB 
+#SBATCH --mem=10GB 
 #SBATCH --cpus-per-task=1 
-#SBATCH --job-name=running_all_experiments
+#SBATCH --job-name=mlp_pytorch_experiments
 #SBATCH --output=/home/maiso/cbu/slurm/output/%x-%j.out
 
-ENV=alc
-REPOSITORY_PATH=$(cat ../config/paths.yaml | grep repository\_path: | grep -v ^# | sed 's/^repository\_path:\ //g')
-BASH_SCRIPTS_FOLDER=src
-SCRIPT_NAME=running_all_experiments.py
+echo Running script at $(pwd)
 
-PYTHON_SCRIPT=$REPOSITORY_PATH/$BASH_SCRIPTS_FOLDER/$SCRIPT_NAME
+ENV=pytorch
+REPOSITORY_PATH=$(cat ../config/paths.yaml | grep repository\_path: | grep -v ^# | sed 's/^repository\_path:\ //g')
+PYTHON_SCRIPTS_FOLDER=src
+PYTHON_SCRIPT_NAME=mlp_pytorch_experiments.py
+
+PYTHON_SCRIPT=$REPOSITORY_PATH/$PYTHON_SCRIPTS_FOLDER/$PYTHON_SCRIPT_NAME
+
+
+echo $(date) - Running python file: $PYTHON_SCRIPT
+echo $(date) - Using python: $(python --version)
+echo $(date) - Which python: $(which python)
 
 # IF PYTHON SCRIPT NOT FOUND, EXIT
 if [ ! -f $PYTHON_SCRIPT ]; then
-    echo "Python script not found ($PYTHON_SCRIPT)"
+    echo "Python script not found ($PYTHON_SCRIPT_NAME)"
 fi
+
 
 # NO VIRTUAL ENV, EXIT
 if [ -z "${VIRTUAL_ENV}" ];
@@ -34,8 +42,8 @@ then
     exit 1
 fi
 
-SIMULATION=False
 
-CUSTOM_COMMAND="$PYTHON_SCRIPT --simulation=$SIMULATION"
+CUSTOM_COMMAND="$PYTHON_SCRIPT"
 echo [RUNNING] python $CUSTOM_COMMAND
 python $CUSTOM_COMMAND
+
