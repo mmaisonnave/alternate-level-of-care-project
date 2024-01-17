@@ -7,6 +7,12 @@ repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
 data_path: /home/maiso/cbu/data
 # ---
 
+# Pytorch MLP
+pytorch_mlp_results: ["$repository_path", "results/pytorch_mlp.csv"]
+pytorch_mlp_log: ["$repository_path", "log/pytorch_mlp.log"]
+pytorch_mlp_model_configurations: ["$repository_path", "config/pytorch_mlp.json"]
+pytorch_temp_checkpoint: ["$repository_path", "checkpoints/temp_checkpoint.pth"]
+
 
 # LOG
 system_log: ["$repository_path", "log/system.log"]

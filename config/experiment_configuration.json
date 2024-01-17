@@ -160,7 +160,8 @@
         "under_sample_majority_class": false,
         "over_sample_minority_class": false,
         "smote_and_undersampling":false,
-        "diagnosis_embeddings": true
+        "diagnosis_embeddings": true,
+        "diag_embedding_model_name": "diag_conf_12"
     },
     "configuration_10": {
         "fix_skew": false,
@@ -176,7 +177,8 @@
         "under_sample_majority_class": false,
         "over_sample_minority_class": false,
         "smote_and_undersampling":false,
-        "diagnosis_embeddings": true
+        "diagnosis_embeddings": true,
+        "diag_embedding_model_name": "diag_conf_12"
     },
     "configuration_11": {
         "fix_skew": false,
@@ -192,7 +194,8 @@
         "under_sample_majority_class": false,
         "over_sample_minority_class": false,
         "smote_and_undersampling":false,
-        "diagnosis_embeddings": true
+        "diagnosis_embeddings": true,
+        "diag_embedding_model_name": "diag_conf_12"
     },
     "configuration_12": {
         "fix_skew": false,

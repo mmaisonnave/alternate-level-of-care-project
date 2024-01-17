@@ -1,0 +1,101 @@
+{
+    "pytorch_conf1": {
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "class_weight": [0.5, 12],
+        "lr": 0.0001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 100,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf2": {
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 5],
+        "class_weight": [0.5, 12],
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 100,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf3": {
+        "validation_ratio":0.25,
+        "hidden_layers": [50],
+        "class_weight": [0.5, 12],
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 100,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf4": {
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 20, 3],
+        "class_weight": [0.5, 12],
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 100,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf5": {
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 20, 3],
+        "class_weight": [0.5, 18],
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 100,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf6": {
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 20, 3],
+        "class_weight": [1, 12],
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 100,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf7": {
+        "validation_ratio":0.2,
+        "hidden_layers": [100, 20, 3],
+        "class_weight": [0.5, 12],
+        "lr": 0.001,
+        "patience": 10,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 1000,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf8": {
+        "validation_ratio":0.25,
+        "hidden_layers": [3],
+        "class_weight": [0.5, 12],
+        "lr": 0.001,
+        "patience": 10,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 1000,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf9": {
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "class_weight": [0.5, 12],
+        "lr": 0.001,
+        "patience": 100,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 1000,
+        "configuration_ids": ["configuration_15"]
+    }
+}
