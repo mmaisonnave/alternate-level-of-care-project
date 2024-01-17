@@ -47,6 +47,11 @@ if __name__ == '__main__':
     # ---------- ---------- ---------- ---------- #
     # RETRIEVING CONFIGURATION FILES AND LOGGER   # 
     # ---------- ---------- ---------- ---------- #
+
+    # 13033 + 299,625 = 312658
+    # (w1)*13033 + (w2)*299,625 = 312658
+    # w1*13,033 = 3*(w2*299,625)
+
     config = configuration.get_config()
     logging = logger.init_logger(config['pytorch_mlp_log'])
 
@@ -118,11 +123,12 @@ if __name__ == '__main__':
                 instance_count, feature_count = X_train.shape
 
                 validation_ratio=pytorch_mlp_config['validation_ratio']
+                logging.debug(f'validation_ratio={validation_ratio}')
                 # Randomly selecting instances to be part of the validation set:
                 val_ix = set(rng.choice(range(instance_count),
                                         size=int(validation_ratio*instance_count), 
                                         replace=False))
-
+                logging.debug(f'len(val_ix)={len(val_ix)}')
                 val_mask = np.array([ix in val_ix for ix in range(instance_count)])
 
                 # Creating validation data and transforming everything into PyTorch tensors.
@@ -137,6 +143,7 @@ if __name__ == '__main__':
                 y_test_tensor = torch.tensor(np.vstack([y_test==0, y_test==1]).T, dtype=torch.float32)
 
 
+
                 logging.debug(f'X_train_tensor.shape=    {X_train_tensor.shape}')
                 logging.debug(f'y_train_tensor.shape=    {y_train_tensor.shape}')
 
@@ -146,11 +153,35 @@ if __name__ == '__main__':
                 logging.debug(f'X_test_tensor.shape=     {X_test_tensor.shape}')
                 logging.debug(f'y_test_tensor.shape=     {y_test_tensor.shape}')
 
+                # new instance count after computing validation split
+                instance_count, feature_count = X_train_tensor.shape
+                logging.debug(f'instance_count={instance_count}')
+                logging.debug(f'feature_count={feature_count}')
+                logging.debug(f'Number of positives in training={np.sum(y_train_tensor[:,1].numpy())}')
+
+                # ---------- ---------- ---------- ---------- ---------- ---------- 
+                positive_count = np.sum(y_train_tensor[:,1].numpy())
+                negative_count = np.sum(y_train_tensor[:,0].numpy())
+                assert positive_count + negative_count == instance_count
+                positive_proportion_importance = pytorch_mlp_config['positive_proportion_importance']
+                                                    # if ==1 then both classes are equally important 
+                                                    # if ==1 equivalent to class_weight==balanced
+                w0 = instance_count/((1+positive_proportion_importance)*negative_count)
+                w1 = instance_count/((1+positive_proportion_importance)*positive_count)
+                class_weight = torch.FloatTensor([w0, positive_proportion_importance*w1])
+
+                logging.debug(f'positive_proportion_importance={positive_proportion_importance}')
+                logging.debug(f'class_weight={class_weight}')
+                # ---------- ---------- ---------- ---------- ---------- ---------- 
+
+
+
                 # ---------- ---------- ---------- ---------- # 
                 # Building Neural Network Architecture        #
                 # ---------- ---------- ---------- ---------- #
                 components = []
                 hidden_layers = pytorch_mlp_config['hidden_layers']
+                logging.debug(f'hidden_layers={hidden_layers}')
                 last_layer_size = feature_count
                 # For each hidden layer we create a linear layer plus a relu activation
                 for ix, size_layer in enumerate(hidden_layers):
@@ -169,9 +200,11 @@ if __name__ == '__main__':
                 # ---------- ---------- ---------- #
                 # Loss function and optimizer      #
                 # ---------- ---------- ---------- #
-                weights = torch.FloatTensor(pytorch_mlp_config['class_weight']) 
-                loss_fn = nn.BCELoss(weight=weights)  # binary cross entropy
-                val_loss_fn= nn.BCELoss(weight=weights)  # binary cross entropy
+                # weights = torch.FloatTensor(pytorch_mlp_config['class_weight']) 
+                # weights = torch.FloatTensor(pytorch_mlp_config['class_weight']) 
+                logging.debug(f'weights={class_weight}')
+                loss_fn = nn.BCELoss(weight=class_weight)  # binary cross entropy
+                val_loss_fn= nn.BCELoss(weight=class_weight)  # binary cross entropy
                 optimizer = optim.Adam(model.parameters(), lr=pytorch_mlp_config['lr'])
 
                 # ---------- ---------- ---------- ---------- #
@@ -180,22 +213,31 @@ if __name__ == '__main__':
                 early_stopper = EarlyStopper(patience=pytorch_mlp_config['patience'], 
                                             tol=pytorch_mlp_config['tol']
                                             )
+                logging.debug(f"patience={pytorch_mlp_config['patience']}")
+                logging.debug(f"tol={pytorch_mlp_config['tol']}")
                 # ---------- #
                 # TRAINING   #
                 # ---------- #
                 n_epochs = pytorch_mlp_config['n_epochs']
+                logging.debug(f'n_epochs={n_epochs}')
                 batch_size=pytorch_mlp_config['batch_size']
+                logging.debug(f'batch_size={batch_size}')
                 epoch=0
                 while epoch < n_epochs and not early_stopper.early_stop:
                     for i in range(0, instance_count, batch_size):
-                        Xbatch = X_train_tensor[i:i+batch_size]
+                        end_of_batch=min(i+batch_size,instance_count)
+                        Xbatch = X_train_tensor[i:end_of_batch]
                         y_pred = model(Xbatch)
-                        ybatch = y_train_tensor[i:i+batch_size]
+                        ybatch = y_train_tensor[i:end_of_batch]
                         loss = loss_fn(y_pred, ybatch)
                         optimizer.zero_grad()
                         loss.backward()
                         optimizer.step()
-                    print(f'Loss: {loss:4.3f}')
+
+                    # Loss for entire training corpus:
+                    with torch.no_grad():
+                        y_pred = model(X_train_tensor)
+                    loss = loss_fn(y_pred, y_train_tensor)
                     # ---------- ---------- #
                     # Validation loss       #
                     # ---------- ---------- #
