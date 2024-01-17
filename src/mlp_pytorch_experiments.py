@@ -1,4 +1,73 @@
+"""
+This modules contains a main function with two nested procedures (checkpoint and resume) and 
+one nested class (EarlyStopper).
+
+The main function runs all the MultiLayerPerceptron (Feed forward neural network) experiments using 
+the PyTorch library. 
+
+The main function takes the following inputs:
+- 'pytorch_mlp.json': A configuration file describing the architecture and hyerparameters of 
+                      all MLP models
+- experiment_configuration.json: A configuration file describing the preprocessings steps 
+                                 to build the training and testing matrices.
+
+For example the first PyTorch MLP model is a single 100-dimension hidden layer architecture:
+    "pytorch_conf1": {
+        "description": "Base model",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_15"]
+    },
+
+This first model (pytorch_conf1) runs using configuration_15:
+    "configuration_15": {
+            "fix_skew": false,
+            "normalize": false,
+            "fix_missing_in_testing": true,
+            "numerical_features": true,
+            "categorical_features": true,
+            "diagnosis_features": false,
+            "intervention_features": false,
+            "use_idf": false,
+            "class_balanced": false,
+            "remove_outliers": true,
+            "under_sample_majority_class": false,
+            "over_sample_minority_class": false,
+            "smote_and_undersampling":false,
+            "diagnosis_embeddings": true,
+            "intervention_embeddings": true,
+            "diag_embedding_model_name": "diag_conf_1",
+            "interv_embedding_model_name": "interv_conf_1"
+        },
+This configuration uses the latest features, including diagnosis and intervention embeddings. 
+
+The results of the models are stored in the output file: 'pytorch_mlp.csv' 
+(path obtained from paths.yaml)
+
+The overview of the main function is as follows:
+1. Define auxiliary procedures and nested class
+2. Computing pending experiments based on the config files
+3. Computing how many experiments are already ran based on results stored in 'pytorch_mlp.csv' file
+4. for experiment_config in experiment_configuration.json':
+5.     X_train, y_train, X_test, y_test <= get_matrices_from config(experiment_config)
+6.     for pytorch_config in 'pytorch_mlp.json':
+7.         split train into train and validation (to perform early stopping using the val loss)
+8.         calculating balanced loss weights 
+9.         creating model using the number of hidden layers specified in pytorch_config
+10.        training Neural Network using Early stopping.
+11.        compute_training_metrics(model, X_train, y_train)
+12.        compute_testing_metrics(model, X_test, y_test)
+13.        append new results to existing result file ('pytorch_mlp.csv')
+
+"""
 import numpy as np
+
 import pandas as pd
 import os
 import torch
@@ -47,11 +116,6 @@ if __name__ == '__main__':
     # ---------- ---------- ---------- ---------- #
     # RETRIEVING CONFIGURATION FILES AND LOGGER   # 
     # ---------- ---------- ---------- ---------- #
-
-    # 13033 + 299,625 = 312658
-    # (w1)*13033 + (w2)*299,625 = 312658
-    # w1*13,033 = 3*(w2*299,625)
-
     config = configuration.get_config()
     logging = logger.init_logger(config['pytorch_mlp_log'])
 

@@ -82,5 +82,113 @@
         "n_epochs": 500,
         "batch_size": 512,
         "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf8": {
+        "description": "Higher importance to readmission class (7x) with standard architecture",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 200,
+        "configuration_ids": ["configuration_15"]
+    },
+    "pytorch_conf9": {
+        "description": "Base model conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf10": {
+        "description": "Deeper model conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 20, 5],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf11": {
+        "description": "Shallow and smaller model conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [20],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf12": {
+        "description": "Higher importance to readmission class (3x) with standar architecture conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 3,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf13": {
+        "description": "Higher importance to readmission class (3x) with three-layer architecture conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 25, 5],
+        "positive_proportion_importance": 3,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf14": {
+        "description": "Higher importance to readmission class (3x) with two-layer architecture conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 5],
+        "positive_proportion_importance": 3,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf15": {
+        "description": "Higher importance to readmission class (7x) with standard architecture conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 7,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 512,
+        "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf16": {
+        "description": "Higher importance to readmission class (7x) with standard architecture conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 200,
+        "configuration_ids": ["configuration_23"]
     }
 }
