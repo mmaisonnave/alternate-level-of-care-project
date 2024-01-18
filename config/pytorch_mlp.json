@@ -190,5 +190,17 @@
         "n_epochs": 500,
         "batch_size": 200,
         "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf17": {
+        "description": "Higher importance to readmission class (50x) with standard architecture conf_23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 50,
+        "lr": 0.001,
+        "patience": 50,
+        "tol": 1e-4,
+        "n_epochs": 500,
+        "batch_size": 200,
+        "configuration_ids": ["configuration_23"]
     }
 }

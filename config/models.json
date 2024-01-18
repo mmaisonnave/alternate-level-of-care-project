@@ -2095,7 +2095,6 @@
                  "ccp_alpha": 0.0,
                  "max_samples": null,
                  "configuration_ids": ["configuration_17",
-                                       "configuration_18",
                                        "configuration_19",
                                        "configuration_20",
                                        "configuration_21",
