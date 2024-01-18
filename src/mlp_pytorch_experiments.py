@@ -153,7 +153,7 @@ if __name__ == '__main__':
         for model_config_name, experiment_config_name in zip(old_df['pytorch_config_name'], 
                                                              old_df['experiment_config_name']):
             if (model_config_name, experiment_config_name) in to_do:
-                # to_do.remove((model_config_name, experiment_config_name))
+                to_do.remove((model_config_name, experiment_config_name))
                 count_already_run+=1
         logging.debug(f'Found {count_already_run} experiments already ran.')
     logging.debug(f'Running {len(to_do)} experiments....')
