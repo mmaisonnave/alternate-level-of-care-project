@@ -153,14 +153,13 @@ if __name__ == '__main__':
         for model_config_name, experiment_config_name in zip(old_df['pytorch_config_name'], 
                                                              old_df['experiment_config_name']):
             if (model_config_name, experiment_config_name) in to_do:
-                to_do.remove((model_config_name, experiment_config_name))
+                # to_do.remove((model_config_name, experiment_config_name))
                 count_already_run+=1
-
         logging.debug(f'Found {count_already_run} experiments already ran.')
     logging.debug(f'Running {len(to_do)} experiments....')
 
 
-    for experiment_configuration_name in [experiment_configuration_name for _,experiment_configuration_name in to_do]:
+    for experiment_configuration_name in set([experiment_configuration_name for _,experiment_configuration_name in to_do]):
         experiment_configuration = experiment_configurations[experiment_configuration_name]
         logging.debug(f'Working with the experiment configuration: {experiment_configuration_name}')
         X_train, y_train, X_test, y_test, columns = health_data.Admission.get_train_test_matrices(experiment_configuration)
@@ -169,7 +168,7 @@ if __name__ == '__main__':
         logging.debug(f'y_train=      {y_train.shape}')
         logging.debug(f'X_test=       {X_train.shape}')
         logging.debug(f'y_test=       {y_test.shape}')
-        logging.debug(f'len(columns)= {len(columns)}')    
+        logging.debug(f'len(columns)= {len(columns)}')
 
         for pytorch_mlp_config_name in [pytorch_mlp_config_name for pytorch_mlp_config_name,_ in to_do]:
             pytorch_mlp_config = pytorch_mlp_configs[pytorch_mlp_config_name]
