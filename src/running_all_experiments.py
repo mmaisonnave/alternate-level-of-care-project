@@ -201,7 +201,10 @@ if __name__ == '__main__':
                 auxdf = pd.read_csv(config['experiment_results'], sep=';')
                 model_ids = set([model_id for model_id in auxdf['model_id']])
                 configuration_ids = set([model_id for model_id in auxdf['config_id']])
-                if model_id in model_ids and configuration_id in configuration_ids:
+                
+                already_run_pairs = set([(model_id, config_id) 
+                                     for model_id,config_id in zip(model_ids,configuration_ids)])
+                if (model_id,configuration_id) in already_run_pairs:
                     logging.debug(f'SKIPPING, configuration ({configuration_id}) and model ({model_id}) already found ...')
                     continue
                 logging.debug('Results not found, running experiments ...')

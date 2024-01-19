@@ -2099,7 +2099,33 @@
                                        "configuration_20",
                                        "configuration_21",
                                        "configuration_22",
-                                       "configuration_23"
+                                       "configuration_23",
+                                       "configuration_15",
+                                       "configuration_13"
+                                      ]
+    },
+    "model_100": {"model_name":"BalancedRandomForestClassifier(sampling_strategy=majority, replace=False,n_estimators=500,balanced_subsample)",
+                 "n_estimators": 500,
+                 "criterion": "gini",
+                 "max_depth": null,
+                 "min_samples_split": 2,
+                 "min_samples_leaf": 1,
+                 "min_weight_fraction_leaf":0.0,
+                 "max_features": "sqrt",
+                 "max_leaf_nodes": null,
+                 "min_impurity_decrease":0.0,
+                 "bootstrap": true,
+                 "oob_score": false,
+                 "sampling_strategy": "majority",
+                 "replacement": true,
+                 "n_jobs": null,
+                 "verbose": 0,
+                 "warm_start": false,
+                 "class_weight": "balanced_subsample",
+                 "ccp_alpha": 0.0,
+                 "max_samples": null,
+                 "configuration_ids": ["configuration_23",
+                                       "configuration_15"
                                       ]
     }
 }

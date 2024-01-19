@@ -98,11 +98,13 @@ class EarlyStopper():
         self.early_stop=False
         self.min_validation_loss = float('inf')
         self.new_min=False
+        config_ = configuration.get_config()
+        self.logging = logger.init_logger(config_['pytorch_mlp_log'])
 
-    def add_validation_loss(self, validation_loss):
+    def add_loss(self, validation_loss):
         self.new_min=False
         if validation_loss < self.min_validation_loss:
-            print(f'NEW MIN: {validation_loss}, saving weights')
+            self.logging.debug(f'NEW MIN: {validation_loss}, saving weights')
             self.new_min=True
             self.min_validation_loss = validation_loss
             self.counter = 0
@@ -258,7 +260,7 @@ if __name__ == '__main__':
 
                 # We use the list of components to build the neural network #
                 model = nn.Sequential(*components)
-                print(model)
+                logging.debug(model)
 
                 # ---------- ---------- ---------- #
                 # Loss function and optimizer      #
@@ -273,7 +275,7 @@ if __name__ == '__main__':
                 # ---------- ---------- ---------- ---------- #
                 # We create an early stopper object           #
                 # ---------- ---------- ---------- ---------- #
-                early_stopper = EarlyStopper(patience=pytorch_mlp_config['patience'], 
+                early_stopper = EarlyStopper(patience=pytorch_mlp_config['patience'],
                                             tol=pytorch_mlp_config['tol']
                                             )
                 logging.debug(f"patience={pytorch_mlp_config['patience']}")
@@ -307,20 +309,27 @@ if __name__ == '__main__':
                     with torch.no_grad():
                         y_pred_val = model(X_val_tensor)
                     validation_loss_result = val_loss_fn(y_pred_val, y_val_tensor)
+                    logging.debug(f'Finished epoch {epoch:4}, latest loss {loss:5.4f} val loss {validation_loss_result:5.4f} ')
 
-                    early_stopper.add_validation_loss(validation_loss_result.numpy())
+                    if 'early_stopping' in pytorch_mlp_config and pytorch_mlp_config['early_stopping']:
+                        logging.debug('USING VALIDATION LOSS FOR EARLY STOPPING')
+
+                        early_stopper.add_loss(validation_loss_result.numpy())
+                    else:
+                        logging.debug('USING TRAINING LOSS FOR EARLY STOPPING')
+                        early_stopper.add_loss(loss.numpy())
                     if early_stopper.new_min:
                         # ---------- ---------- ---------- ---------- ---------- ---------- #
                         # We save the latest checkpoint with the lowest validation loss     #
                         # ---------- ---------- ---------- ---------- ---------- ---------- #
                         checkpoint(model, config['pytorch_temp_checkpoint'])
                     epoch+=1
-                    print(f'Finished epoch {epoch:4}, latest loss {loss:5.4f} val loss {validation_loss_result:5.4f} ')
 
                     if early_stopper.early_stop:
-                        print('Exiting due to Early stopping, recovering best model ...')
+                        logging.debug('Exiting due to Early stopping, recovering best model ...')
                         resume(model, config['pytorch_temp_checkpoint'])
-                
+                    
+                    
                 # ---------- ---------- ---------- ---------- ---------- ---------- #
                 # TRAINING FINISHED, COMPUTING METRICS (TRAINING SPLIT)             #
                 # ---------- ---------- ---------- ---------- ---------- ---------- #

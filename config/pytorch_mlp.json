@@ -202,5 +202,70 @@
         "n_epochs": 500,
         "batch_size": 200,
         "configuration_ids": ["configuration_23"]
+    },
+    "pytorch_conf18": {
+        "description": "balanced dataset (positive_proporiton=1), patience=25, no early stop, conf23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 25,
+        "tol": 1e-4,
+        "n_epochs": 250,
+        "batch_size": 50,
+        "configuration_ids": ["configuration_23"],
+        "early_stopping": false
+    },
+    "pytorch_conf19": {
+        "description": "balanced dataset (positive_proporiton=1), patience=25, no early stop, conf15",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 25,
+        "tol": 1e-4,
+        "n_epochs": 250,
+        "batch_size": 50,
+        "configuration_ids": ["configuration_15"],
+        "early_stopping": false
+    },
+    "pytorch_conf20": {
+        "description": "balanced dataset (positive_proporiton=1), patience=25, lot of layers , no early stop, conf15",
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 75, 50, 25, 10, 5],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 25,
+        "tol": 1e-4,
+        "n_epochs": 250,
+        "batch_size": 50,
+        "configuration_ids": ["configuration_15"],
+        "early_stopping": false
+    },
+    "pytorch_conf21": {
+        "description": "balanced dataset (positive_proporiton=1), patience=25, lot of layers , no early stop, conf23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100, 75, 50, 25, 10, 5],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 25,
+        "tol": 1e-4,
+        "n_epochs": 250,
+        "batch_size": 50,
+        "configuration_ids": ["configuration_23"],
+        "early_stopping": false
+    },
+    "pytorch_conf22": {
+        "description": "balanced dataset (positive_proporiton=1), patience=25, lot of layers , no early stop, conf23",
+        "validation_ratio":0.25,
+        "hidden_layers": [100],
+        "positive_proportion_importance": 1,
+        "lr": 0.001,
+        "patience": 25,
+        "tol": 1e-4,
+        "n_epochs": 250,
+        "batch_size": 5000,
+        "configuration_ids": ["configuration_23"],
+        "early_stopping": true
     }
 }
