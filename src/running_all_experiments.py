@@ -236,7 +236,7 @@ if __name__ == '__main__':
             # EVALUATING ON TRAINING
             y_true = y_train
             y_pred = model.predict(X_train)
-            y_score= model.predict_proba(X_train)
+            y_score= model.predict_proba(X_train)[:,1]
 
             model_name = model_dict['model_name']
             columns = ['Model',
@@ -265,7 +265,7 @@ if __name__ == '__main__':
                     precision_score(y_true, y_pred,),
                     recall_score(y_true, y_pred,),
                     f1_score(y_true, y_pred,),
-                    roc_auc_score(y_true=y_true, y_score=y_pred),
+                    roc_auc_score(y_true=y_true, y_score=y_score),
                     str(configuration_dict),
                     str(model_dict),
                     configuration_id,
@@ -275,7 +275,7 @@ if __name__ == '__main__':
             # EVALUATION ON TESTING
             y_true = y_test
             y_pred = model.predict(X_test)
-            y_score= model.predict_proba(X_test)
+            y_score= model.predict_proba(X_test)[:,1] #model.predict_proba(X_train)[:,1]
 
             tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()   
             vec2 = [model_name,
@@ -287,7 +287,7 @@ if __name__ == '__main__':
                     precision_score(y_true, y_pred,),
                     recall_score(y_true, y_pred,),
                     f1_score(y_true, y_pred,),
-                    roc_auc_score(y_true=y_true, y_score=y_pred),
+                    roc_auc_score(y_true=y_true, y_score=y_score),
                     str(configuration_dict),
                     str(model_dict),
                     configuration_id,

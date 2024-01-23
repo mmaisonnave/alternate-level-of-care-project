@@ -2149,7 +2149,9 @@
                  "class_weight": "balanced_subsample",
                  "ccp_alpha": 0.0,
                  "max_samples": null,
-                 "configuration_ids": ["configuration_25"
+                 "configuration_ids": ["configuration_25",
+                                       "configuration_24",
+                                       "configuration_26"
                                       ]
     },
     "model_102": {"model_name":"BalancedRandomForestClassifier(sampling_strategy=majority, replace=False,n_estimators=500,balanced_subsample)",
@@ -2176,6 +2178,29 @@
                                        ]
     },
     "model_103": {"model_name":"BalancedRandomForestClassifier(sampling_strategy=majority, replace=False,n_estimators=500,balanced_subsample)",
+                 "n_estimators": 500,
+                 "criterion": "gini",
+                 "max_depth": null,
+                 "min_samples_split": 2,
+                 "min_samples_leaf": 1,
+                 "min_weight_fraction_leaf":0.0,
+                 "max_features": "sqrt",
+                 "max_leaf_nodes": null,
+                 "min_impurity_decrease":0.0,
+                 "bootstrap": true,
+                 "oob_score": false,
+                 "sampling_strategy": "majority",
+                 "replacement": true,
+                 "n_jobs": null,
+                 "verbose": 0,
+                 "warm_start": false,
+                 "class_weight": "balanced_subsample",
+                 "ccp_alpha": 0.0,
+                 "max_samples": null,
+                 "configuration_ids": ["configuration_13"
+                                       ]
+    },
+    "model_104": {"model_name":"BalancedRandomForestClassifier(sampling_strategy=majority, replace=False,n_estimators=500,balanced_subsample)",
                  "n_estimators": 500,
                  "criterion": "gini",
                  "max_depth": null,
