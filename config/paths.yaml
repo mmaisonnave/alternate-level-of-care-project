@@ -30,6 +30,7 @@ logreg_latex: ["$repository_path", "results/logistic_regression.tex"]
 latex_tables: ["$repository_path", "results/tables.tex"]
 figures_folder: ["$repository_path", "figures/"]
 experiment_results: ["$repository_path", "results/experiments_results.csv"]
+custom_conf_results: ["$repository_path", "results/custom_conf_results.csv"]
 
 # Gensim
 gensim_model_folder: ["$repository_path", "gensim/models/"]

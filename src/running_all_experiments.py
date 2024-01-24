@@ -83,6 +83,16 @@ On a high level, the main functions does the following:
 
 
 """
+# INPUT: 
+    # model_configurations = json.load(open(config['models_config'], encoding='utf-8'))
+    # experiment_configurations = json.load(open(config['experiments_config'], encoding='utf-8'))
+# OUTPUT: 
+    # logging = logger.init_logger(config['all_experiments_log'])
+
+# INPUT AND OUTPUT
+    # new_df.to_csv(config['experiment_results'], index=False, sep=';')
+
+
 import pandas as pd
 import numpy as np
 import json
@@ -115,8 +125,15 @@ if __name__ == '__main__':
                         type=str,
                         choices=['True', 'False']
                         )
+    parser.add_argument('--experiment-configuration',
+                        dest='experiment_configuration', 
+                        required=True,
+                        help="Choose one particular configuration to run (configuration_name:str) or all ('all')",
+                        type=str,
+                        )
     args = parser.parse_args()
     simulation = args.simulation=='True'
+
 
     # ---------- ---------- ---------- ---------- ---------- ---------- #
     # Retrieving configuration (paths.yaml) and initializing logger     #
@@ -127,6 +144,11 @@ if __name__ == '__main__':
         logging.debug('Running only a SIMULATIOn run.')
     logging.debug('Starting all experiments ...')
 
+    if args.experiment_configuration == 'all':
+        csv_output_file = config['experiment_results']
+    else:
+        csv_output_file = config['custom_conf_results'][:-4]+f'_{args.experiment_configuration}.csv'
+    print(f'STORING results in: {csv_output_file}')
 
     # ---------- ---------- ---------- ---------- ---------- ---------- #
     # Retrieving model (models.json) and experiment configurations      #
@@ -150,8 +172,8 @@ if __name__ == '__main__':
     logging.debug(f'Number of experiments found (in total): {len(to_do)}')
     
     already_ran = {}
-    if os.path.isfile(config['experiment_results']):
-        already_run_df = pd.read_csv(config['experiment_results'], sep=';')
+    if os.path.isfile(csv_output_file):
+        already_run_df = pd.read_csv(csv_output_file, sep=';')
 
         already_ran = [(config_id, model_id) for config_id, model_id in zip(already_run_df['config_id'], already_run_df['model_id'])]
         already_ran = set(already_ran)
@@ -163,17 +185,34 @@ if __name__ == '__main__':
 
     logging.debug(f'Pending experiments ({len(pending)})={pending}')
     logging.debug(f'Number of configuration founds: {len(experiment_configurations)} ({experiment_configurations.keys()})')
-    if simulation:
-        logging.debug('Ending simulation without running any experiment ...')
-        sys.exit(0)
-
 
     # Filtering configurations not needed for this run:
     experiment_configurations = {configuration_id:configuration_dict 
                                  for configuration_id, configuration_dict in experiment_configurations.items()
                                  if configuration_id in pending_conf
                                  }
+    
+    if args.experiment_configuration!='all':
+        logging.debug(f'Filtering using custom configuration={args.experiment_configuration}')
+        experiment_configurations = {configuration_id:configuration_dict
+                                 for configuration_id, configuration_dict in experiment_configurations.items()
+                                 if configuration_id==args.experiment_configuration
+                                 }
+        logging.debug(f'Number of configuration founds after filtering: {len(experiment_configurations)} ({experiment_configurations.keys()})')
+
+        pending = [(config_id, model_id) 
+                    for config_id, model_id in pending
+                    if config_id==args.experiment_configuration
+                    ]
+        logging.debug(f'Pending experiments after selecting custom configuration ({args.experiment_configuration})({len(pending)})={pending}')
+
     logging.debug(f'Number of config pending to-do: {len(experiment_configurations)} ({experiment_configurations.keys()})')
+
+    if simulation:
+        logging.debug('Ending simulation without running any experiment ...')
+        sys.exit(0)
+
+
 
     # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- 
     # RUNNING ALL CONFIGURATIONS
@@ -197,8 +236,8 @@ if __name__ == '__main__':
             logging.debug(f'Working on model ID= {model_id}')
 
             # Skipping if already ran.
-            if os.path.isfile(config['experiment_results']):
-                auxdf = pd.read_csv(config['experiment_results'], sep=';')
+            if os.path.isfile(csv_output_file):
+                auxdf = pd.read_csv(csv_output_file, sep=';')
                 model_ids = set([model_id for model_id in auxdf['model_id']])
                 configuration_ids = set([model_id for model_id in auxdf['config_id']])
                 
@@ -297,11 +336,11 @@ if __name__ == '__main__':
             new_df = pd.DataFrame(m, columns=columns)
 
             # SAVING
-            if os.path.isfile(config['experiment_results']):
-                old_df = pd.read_csv(config['experiment_results'], sep=';')
+            if os.path.isfile(csv_output_file):
+                old_df = pd.read_csv(csv_output_file, sep=';')
                 logging.debug(f'Previous experiments found: {old_df.shape[0]} entries found')
                 new_df = pd.concat([old_df,new_df])
 
-            new_df.to_csv(config['experiment_results'], index=False, sep=';')
-            logging.debug(f"Saving results in {config['experiment_results'].split('/')[-1]}")
+            new_df.to_csv(csv_output_file, index=False, sep=';')
+            logging.debug(f"Saving results in {csv_output_file.split('/')[-1]}")
             logging.debug(f'Saving {new_df.shape[0]} entries.')

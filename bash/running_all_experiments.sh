@@ -1,9 +1,9 @@
 #!/bin/bash
-#SBATCH --time=24:00:0
+#SBATCH --time=2:00:0
 #SBATCH --account=def-erajabi
 #SBATCH --ntasks=1 
 #SBATCH --nodes=1 
-#SBATCH --mem=16GB 
+#SBATCH --mem=32GB 
 #SBATCH --cpus-per-task=1 
 #SBATCH --job-name=running_all_experiments
 #SBATCH --output=/home/maiso/cbu/slurm/output/%x-%j.out
@@ -22,7 +22,7 @@ fi
 
 # NO VIRTUAL ENV, EXIT
 if [ -z "${VIRTUAL_ENV}" ];
-then 
+then
     echo Scripts expect conda environment set "$ENV"
     exit 1
 fi
@@ -35,7 +35,8 @@ then
 fi
 
 SIMULATION=False
+CUSTOM_CONFIGURATION=configuration_31
 
-CUSTOM_COMMAND="$PYTHON_SCRIPT --simulation=$SIMULATION"
+CUSTOM_COMMAND="$PYTHON_SCRIPT --simulation=$SIMULATION --experiment-configuration=$CUSTOM_CONFIGURATION"
 echo [RUNNING] python $CUSTOM_COMMAND
 python $CUSTOM_COMMAND
