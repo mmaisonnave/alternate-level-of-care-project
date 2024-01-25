@@ -238,12 +238,13 @@ if __name__ == '__main__':
             # Skipping if already ran.
             if os.path.isfile(csv_output_file):
                 auxdf = pd.read_csv(csv_output_file, sep=';')
-                model_ids = set([model_id for model_id in auxdf['model_id']])
-                configuration_ids = set([model_id for model_id in auxdf['config_id']])
+                model_ids = ([model_id_ for model_id_ in auxdf['model_id']])
+                configuration_ids = ([config_id_ for config_id_ in auxdf['config_id']])
+
+                already_run_pairs = set([(model_id_, config_id_) 
+                                     for model_id_,config_id_ in zip(model_ids,configuration_ids)])
                 
-                already_run_pairs = set([(model_id, config_id) 
-                                     for model_id,config_id in zip(model_ids,configuration_ids)])
-                if (model_id,configuration_id) in already_run_pairs:
+                if (model_id, configuration_id) in already_run_pairs:
                     logging.debug(f'SKIPPING, configuration ({configuration_id}) and model ({model_id}) already found ...')
                     continue
                 logging.debug('Results not found, running experiments ...')
