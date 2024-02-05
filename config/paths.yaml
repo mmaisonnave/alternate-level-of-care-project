@@ -7,6 +7,10 @@ repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
 data_path: /home/maiso/cbu/data
 # ---
 
+# SAVED MODELS
+balanced_random_forest_path: ["$repository_path", "checkpoints/balanced_random_forest.joblib"]
+
+
 # Pytorch MLP
 pytorch_mlp_results: ["$repository_path", "results/pytorch_mlp.csv"]
 pytorch_mlp_log: ["$repository_path", "log/pytorch_mlp.log"]
@@ -31,6 +35,9 @@ latex_tables: ["$repository_path", "results/tables.tex"]
 figures_folder: ["$repository_path", "figures/"]
 experiment_results: ["$repository_path", "results/experiments_results.csv"]
 custom_conf_results: ["$repository_path", "results/custom_conf_results.csv"]
+
+#FIGURES
+surrogate_decision_tree_figure: ["$figures_folder", "surrogate_decision_tree.jpg"]
 
 # Gensim
 gensim_model_folder: ["$repository_path", "gensim/models/"]
