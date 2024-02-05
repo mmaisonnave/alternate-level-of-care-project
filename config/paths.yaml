@@ -29,10 +29,11 @@ all_experiments_log: ["$repository_path", "log/all_experiments.log"]
 
 
 # Output results
+surrogate_models_results: ["$repository_path", "results/surrogate_models_results.csv"]
 logreg_results: ["$repository_path", "results/logistic_regression.csv"]
 logreg_latex: ["$repository_path", "results/logistic_regression.tex"]
 latex_tables: ["$repository_path", "results/tables.tex"]
-figures_folder: ["$repository_path", "figures/"]
+figures_folder: ["$repository_path", "results/figures/"]
 experiment_results: ["$repository_path", "results/experiments_results.csv"]
 custom_conf_results: ["$repository_path", "results/custom_conf_results.csv"]
 
@@ -47,7 +48,6 @@ gensim_config: ["$repository_path", "config/gensim.json"]
 
 
 # Input and Output
-
 json_file: ["$data_path", "2015_2022/full_database.json"]
 train_val_json: ["$data_path", "2015_2022/train_validation.json"]
 heldout_json: ["$data_path", "2015_2022/heldout.json"]
@@ -65,8 +65,17 @@ diagnosis_dict: ["$data_path", "2015_2022/diagnosis_dict.json"]
 intervention_dict: ["$data_path", "2015_2022/intervention_dict.json"]
 
 
+# Partial Dependency Plots
+ppd_age_figure: ["$figures_folder", "PDP_age.jpg"]
+ppd_case_weight_figure: ["$figures_folder", "PDP_case_weight.jpg"]
+ppd_cmg_figure: ["$figures_folder", "PDP_cmg.jpg"]
+ppd_acute_days_figure: ["$figures_folder", "PDP_acute_days.jpg"]
+ppd_alc_days_figure: ["$figures_folder", "PDP_alc_days.jpg"]
+
+
 # Only input
 keyfile: ["$repository_path", "config/alc.key"]
+housing_data: ["$data_path", "california-housing/housing.pickle"]
 
 experiments_config: ["$repository_path", "config/experiment_configuration.json"]
 models_config: ["$repository_path", "config/models.json"]
