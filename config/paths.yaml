@@ -73,6 +73,13 @@ ppd_acute_days_figure: ["$figures_folder", "PDP_acute_days.jpg"]
 ppd_alc_days_figure: ["$figures_folder", "PDP_alc_days.jpg"]
 
 
+# Permutation Feature Importance
+permutation_feature_importance_results: ["$repository_path", "results/permutation_feature_importance.csv"]
+
+
+# Surrogate LogReg Coefficient importance dataframe
+surrogate_logreg_coefficients: ["$repository_path", "results/surrogate_logreg_coefficients.csv"]
+
 # Only input
 keyfile: ["$repository_path", "config/alc.key"]
 housing_data: ["$data_path", "california-housing/housing.pickle"]

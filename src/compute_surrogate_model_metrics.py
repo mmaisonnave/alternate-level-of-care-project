@@ -5,6 +5,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import argparse
 
+from sklearn.preprocessing import StandardScaler
 from sklearn import tree
 from sklearn.linear_model import LogisticRegression
 from sklearn.tree import DecisionTreeClassifier
@@ -63,7 +64,7 @@ if __name__ == '__main__':
     print(f'Using EXPERIMENT_CONFIGURATION_NAME={EXPERIMENT_CONFIGURATION_NAME}')
     print('Loading data ...')
     experiment_configurations = json.load(open(config['experiments_config'], encoding='utf-8'))
-    X_train, y_train, X_test, y_test, columns = health_data.Admission.get_train_test_matrices(
+    X_train, y_train, X_test, y_test, features_names = health_data.Admission.get_train_test_matrices(
                                                     experiment_configurations[EXPERIMENT_CONFIGURATION_NAME])
 
 
@@ -93,7 +94,7 @@ if __name__ == '__main__':
 
     # SAVING DecisionTree Plot
     fig, ax = plt.subplots(figsize=(10,10))
-    tree.plot_tree(surrogate_model, feature_names=list(columns), class_names=['NR', 'R'])
+    tree.plot_tree(surrogate_model, feature_names=list(features_names), class_names=['NR', 'R'])
     fig.savefig(config['surrogate_decision_tree_figure'], bbox_inches='tight')
 
 
@@ -102,7 +103,39 @@ if __name__ == '__main__':
     # ---------- ---------- ---------- ---------- ---------- #
     surrogate_model_lr = configuration.model_from_configuration_name(LR_MODEL_CONFIGURATION_NAME)
     print('Training LogisticRegression ...')
-    surrogate_model_lr.fit(X_train, yhat_train, )
+    surrogate_model_lr.fit(X_train,
+                           yhat_train,)
+
+
+    # ---------- ---------- ---------- ---------- ---------- #
+    # Surrogate NORMALIZED LogisticRegression Model          #
+    # ---------- ---------- ---------- ---------- ---------- #
+    surrogate_model_norm_lr = configuration.model_from_configuration_name(LR_MODEL_CONFIGURATION_NAME)
+    print('Training LogisticRegression with normalize features (to analyze coefficients) ...')
+    surrogate_model_norm_lr.fit(StandardScaler().fit_transform(X_train),
+                        yhat_train, )
+    
+    # ---------- ---------- #
+    # SAVING COEFFICIENTS   #
+    # ---------- ---------- #
+    print('Finished computing coefficients (normalized features), formating and saving ...')
+    scored_feature_names = list(zip(list(surrogate_model_norm_lr.coef_[0,:]),
+                                    features_names))
+
+    scored_feature_names = sorted(scored_feature_names, 
+                                  key=lambda x:np.abs(x[0]), reverse=True)
+
+    coefficients_df = pd.DataFrame(scored_feature_names,
+                                   columns=['Score', 'Feature Name'])
+    
+    coefficients_df = coefficients_df[['Feature Name', 'Score']]
+
+    coefficients_df.to_csv(config['surrogate_logreg_coefficients'], index=False)
+    print('DONE, saving metrics ...')
+
+    # ---------- ---------- #
+    # SAVING METRICS        #
+    # ---------- ---------- #
 
     df = pd.concat([
                 _get_metric_evaluations(brf, X_train, y_train, description='BRF training', model_config_name=BRF_MODEL_CONFIGURATION_NAME),
@@ -117,7 +150,14 @@ if __name__ == '__main__':
                 _get_metric_evaluations(surrogate_model_lr, X_test, y_test, description='LR testing', model_config_name=LR_MODEL_CONFIGURATION_NAME),
                 _get_metric_evaluations(surrogate_model_lr, X_train, yhat_train, description='LR training (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
                 _get_metric_evaluations(surrogate_model_lr, X_test, yhat_test, description='LR testing (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+
+                _get_metric_evaluations(surrogate_model_norm_lr, X_train, y_train, description='Norm LR training', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+                _get_metric_evaluations(surrogate_model_norm_lr, X_test, y_test, description='Norm LR testing', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+                _get_metric_evaluations(surrogate_model_norm_lr, X_train, yhat_train, description='Norm LR training (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+                _get_metric_evaluations(surrogate_model_norm_lr, X_test, yhat_test, description='Norm LR testing (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
             ])
     
     df['configuration_name'] = [EXPERIMENT_CONFIGURATION_NAME]*df.shape[0]
     df.to_csv(config['surrogate_models_results'], index=False)
+    print('DONE')
+
