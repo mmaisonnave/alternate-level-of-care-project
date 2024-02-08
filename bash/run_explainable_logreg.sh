@@ -1,11 +1,11 @@
 #!/bin/bash
-#SBATCH --time=5-0:00:0
+#SBATCH --time=6:00:0
 #SBATCH --account=def-erajabi
 #SBATCH --ntasks=1 
 #SBATCH --nodes=1 
-#SBATCH --mem=32GB 
-#SBATCH --cpus-per-task=1 
-#SBATCH --job-name=compute_permutation_feature_importance
+#SBATCH --mem=64GB 
+#SBATCH --cpus-per-task=1
+#SBATCH --job-name=run_explainable_logreg
 #SBATCH --output=/home/maiso/cbu/slurm/output/%x-%j.out
 
 echo Running script at $(pwd)
@@ -13,9 +13,10 @@ echo Running script at $(pwd)
 ENV=alc
 REPOSITORY_PATH=$(cat ../config/paths.yaml | grep repository\_path: | grep -v ^# | sed 's/^repository\_path:\ //g')
 PYTHON_SCRIPTS_FOLDER=src
-PYTHON_SCRIPT_NAME=compute_permutation_feature_importance.py
+PYTHON_SCRIPT_NAME=run_explainable_logreg.py
 
 PYTHON_SCRIPT=$REPOSITORY_PATH/$PYTHON_SCRIPTS_FOLDER/$PYTHON_SCRIPT_NAME
+
 
 echo $(date) - Running python file: $PYTHON_SCRIPT
 echo $(date) - Using python: $(python --version)
@@ -40,9 +41,8 @@ then
     echo Scripts expect conda environment set "$ENV"
     exit 1
 fi
-IGNORE_DIAG_AND_INTERV=True
 
-CUSTOM_COMMAND="$PYTHON_SCRIPT --ignore-diag-and-interv=$IGNORE_DIAG_AND_INTERV"
+CUSTOM_COMMAND="$PYTHON_SCRIPT"
 echo [RUNNING] python $CUSTOM_COMMAND
 python $CUSTOM_COMMAND
 

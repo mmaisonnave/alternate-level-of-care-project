@@ -5767,5 +5767,23 @@
         "min_impurity_decrease": 0.0,
         "class_weight": {"0": 0.5217392936794599, "1": 11.999913644214162},
         "ccp_alpha": 0.0
+    },
+    "model_302": {
+        "model_name": "LogisticRegression(class_weight=balanced)",
+        "penalty": "l2",
+        "dual": false,
+        "tol": 0.0001,
+        "C": 1.0,
+        "fit_intercept": true,
+        "intercept_scaling": 1,
+        "class_weight": "balanced",
+        "random_state": null,
+        "solver": "lbfgs",
+        "max_iter": 15000,
+        "multi_class": "auto",
+        "verbose": 0,
+        "warm_start": false,
+        "n_jobs": null,
+        "l1_ratio": null    
     }
 }

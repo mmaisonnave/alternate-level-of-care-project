@@ -1,3 +1,11 @@
+"""
+This scripts takes config/gensim.json as an input, and computes each one of the 
+embedding models described in the file. It skips all already  computed embeddings (those 
+which are already stored in disk).
+
+The results are stored (an read from) gensim/models/
+
+"""
 import json
 import os
 import sys
@@ -10,7 +18,7 @@ if __name__=='__main__':
     config = configuration.get_config()
 
     # Opening JSON file 
-    with open(config['gensim_config'])  as f:
+    with open(config['gensim_config'], encoding='utf-8')  as f:
         gensim_config = json.load(f) 
 
     train, test = health_data.Admission.get_training_testing_data()

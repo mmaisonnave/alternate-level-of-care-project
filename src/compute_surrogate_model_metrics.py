@@ -1,3 +1,12 @@
+"""
+The purpose of this script was to create surrogate models (LogReg and DecisionTree) for the best model we have
+so far (BalancedRandomForest). However, I am going to replace that to the models trained on the ground truth 
+data (not trained to copy the BRF model).
+
+So, this script would be replaced by:
+    - run_explainable_dt.py
+    - run_explainable_logreg.py
+"""
 import pandas as pd
 import joblib
 import json
@@ -93,8 +102,15 @@ if __name__ == '__main__':
     surrogate_model.fit(X_train, yhat_train, )
 
     # SAVING DecisionTree Plot
-    fig, ax = plt.subplots(figsize=(10,10))
-    tree.plot_tree(surrogate_model, feature_names=list(features_names), class_names=['NR', 'R'])
+    fig, ax = plt.subplots(figsize=(20,10))
+    tree.plot_tree(surrogate_model, 
+                   feature_names=list(features_names), 
+                   class_names=['NR', 'R'],
+                   fontsize=9,
+                   impurity=False,
+                   label='none',
+                   filled=True,
+                   )
     fig.savefig(config['surrogate_decision_tree_figure'], bbox_inches='tight')
 
 
@@ -110,10 +126,14 @@ if __name__ == '__main__':
     # ---------- ---------- ---------- ---------- ---------- #
     # Surrogate NORMALIZED LogisticRegression Model          #
     # ---------- ---------- ---------- ---------- ---------- #
+    scaler = StandardScaler()
+    # norm_X_train = scaler.fit_transform(X_train.toarray())
+    norm_X_test = scaler.fit_transform(X_test.toarray())
+
     surrogate_model_norm_lr = configuration.model_from_configuration_name(LR_MODEL_CONFIGURATION_NAME)
     print('Training LogisticRegression with normalize features (to analyze coefficients) ...')
-    surrogate_model_norm_lr.fit(StandardScaler().fit_transform(X_train),
-                        yhat_train, )
+    surrogate_model_norm_lr.fit(norm_X_test,
+                        yhat_test, )
     
     # ---------- ---------- #
     # SAVING COEFFICIENTS   #
@@ -151,10 +171,10 @@ if __name__ == '__main__':
                 _get_metric_evaluations(surrogate_model_lr, X_train, yhat_train, description='LR training (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
                 _get_metric_evaluations(surrogate_model_lr, X_test, yhat_test, description='LR testing (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
 
-                _get_metric_evaluations(surrogate_model_norm_lr, X_train, y_train, description='Norm LR training', model_config_name=LR_MODEL_CONFIGURATION_NAME),
-                _get_metric_evaluations(surrogate_model_norm_lr, X_test, y_test, description='Norm LR testing', model_config_name=LR_MODEL_CONFIGURATION_NAME),
-                _get_metric_evaluations(surrogate_model_norm_lr, X_train, yhat_train, description='Norm LR training (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
-                _get_metric_evaluations(surrogate_model_norm_lr, X_test, yhat_test, description='Norm LR testing (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+                # _get_metric_evaluations(surrogate_model_norm_lr, norm_X_train, y_train, description='Norm LR training', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+                _get_metric_evaluations(surrogate_model_norm_lr, norm_X_test, y_test, description='Norm LR testing', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+                # _get_metric_evaluations(surrogate_model_norm_lr, norm_X_train, yhat_train, description='Norm LR training (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
+                _get_metric_evaluations(surrogate_model_norm_lr, norm_X_test, yhat_test, description='Norm LR testing (comp BRF)', model_config_name=LR_MODEL_CONFIGURATION_NAME),
             ])
     
     df['configuration_name'] = [EXPERIMENT_CONFIGURATION_NAME]*df.shape[0]

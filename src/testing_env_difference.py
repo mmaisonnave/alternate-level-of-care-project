@@ -1,3 +1,9 @@
+"""This scripts was built to run a MLP PyTorch model and a BalancedRandomForest (BRF) classifier. 
+The script was created for debuging purposes. The results of the MLP classifier with PyTorch
+were suspiciously good. Running the BRF with the pytorch environment gave me better results than
+using the running_all_experiments scripts. I found a mistake in the running_all_experiments scripts,
+now that the bug was found and fixed, this script has no purpose.
+"""
 import pandas as pd
 # import torch
 # import torch.nn as nn

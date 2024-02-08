@@ -1,3 +1,11 @@
+"""
+This scripts just takes 'configuration_82' (All dummy features min_df=2), and 
+'model_104' (BRF, n_estimators=500, sampling_strategy="majority", replacement=True, 
+class_weight=balanced_subsample) creates and trains the model.
+
+The resulting model is stored in checkpoints/balanced_random_forest.joblib
+
+"""
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
 import numpy as np
 import joblib

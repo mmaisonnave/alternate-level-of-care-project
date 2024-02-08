@@ -1,3 +1,8 @@
+"""
+This script takes configuration no 82 (configuration_82) (All dummy features min_df=2), and loads an already
+trained  BRF model from disk. For each numeric var (['age', 'cmg', 'case_weight', 'acute_days', 'alc_days]),
+the scripts computes the partial dependency plot (PDP) and it stores it in disk (results/figures/PDP_{var}.jpg)
+"""
 import sys
 import json
 import pickle
