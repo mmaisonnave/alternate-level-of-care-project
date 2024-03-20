@@ -78,11 +78,11 @@ if __name__ == '__main__':
     def code2description(code):
         if code.upper() in diagnosis_mapping or code in diagnosis_mapping:
             assert not (code.upper() in intervention_mapping or code in intervention_mapping)
-            return diagnosis_mapping[code.upper()]
+            return "DIAG: "+diagnosis_mapping[code.upper()]
         
         if code.upper() in intervention_mapping or code in intervention_mapping:
             assert not (code.upper() in diagnosis_mapping or code in diagnosis_mapping)
-            return intervention_mapping[code.upper()]
+            return "INT: "+intervention_mapping[code.upper()]
         return "N/A"
 
 

@@ -8,6 +8,9 @@ This script creates:
 The input for all is the training and testing data:
  - training ,testing = health_data.Admission.get_training_testing_data(filtering=True)
 
+ The script doesn't use the method "get_train_test_matrices", which means this 
+ script is slightly outdated.
+
 """
 import pandas as pd
 import numpy as np

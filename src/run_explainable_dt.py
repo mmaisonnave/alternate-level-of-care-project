@@ -14,10 +14,12 @@ import json
 if __name__ == '__main__':
     EXPERIMENT_CONFIGURATION_NAMES = [('configuration_27', 'numerical'),
                                       ('configuration_28', 'categorical'),
+                                      ('configuration_87','numerical + categorical'),
                                       ('configuration_85', 'intervention'),
                                       ('configuration_86', 'diagnosis'),
+                                      ('configuration_82', 'all dummies')
                                       ]
-
+    
     config = configuration.get_config()
     metric_dfs=[]
     for experiment_configuration_name, experiment_configuration_description in EXPERIMENT_CONFIGURATION_NAMES:
@@ -60,19 +62,19 @@ if __name__ == '__main__':
             results = {key: [results[key]] for key in results}
             return pd.DataFrame(results)
 
-        metric_dfs += [_get_metric_evaluations(dt_model, 
-                                                X_train, 
-                                                y_train, 
+        metric_dfs += [_get_metric_evaluations(dt_model,
+                                                X_train,
+                                                y_train,
                                                 DT_MODEL_CONFIGURATION_NAME, 
                                                 experiment_config_name=experiment_configuration_name,
                                                 description='TRAIN'
                                                 ),
-                    _get_metric_evaluations(dt_model, 
-                                            X_test, 
-                                            y_test, 
-                                            DT_MODEL_CONFIGURATION_NAME, 
-                                            experiment_config_name=experiment_configuration_name,
-                                            description='TEST')]
+                        _get_metric_evaluations(dt_model,
+                                                X_test,
+                                                y_test,
+                                                DT_MODEL_CONFIGURATION_NAME, 
+                                                experiment_config_name=experiment_configuration_name,
+                                                description='TEST')]
 
 
 
