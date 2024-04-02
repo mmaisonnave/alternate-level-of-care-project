@@ -99,6 +99,8 @@ import json
 from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, roc_auc_score
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import cross_validate
+from sklearn.model_selection import KFold
+
 import os
 import argparse
 
@@ -114,6 +116,7 @@ from imblearn.over_sampling import SMOTE
 from imblearn.pipeline import Pipeline
 
 if __name__ == '__main__':
+    N_SPLITS=3
     # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- #
     # Simulation parameter used to compute pending experiments without running them           #
     # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- #
@@ -285,24 +288,148 @@ if __name__ == '__main__':
             print(f'y_test.shape=     {y_test.shape}')
             print(f'combined_y.shape= {combined_y.shape}')
             print()
-
-
-            cv_results = cross_validate(model,
-                                        combined_X,
-                                        combined_y,
-                                        cv=3,
-                                        scoring=['accuracy', 'precision', 'recall', 'f1', 'roc_auc']
-                                        )
-
-            cv_results_df = pd.DataFrame(cv_results)
-
-            averages = pd.DataFrame(np.average(cv_results_df.values, axis=0).reshape(1,-1),
-                                    columns=[f'{column}_avg' for column in cv_results_df.columns])
             
-            stds = pd.DataFrame(np.std(cv_results_df.values, axis=0).reshape(1,-1),
-                                    columns=[f'{column}_std' for column in cv_results_df.columns])
             
-            results_df = averages.join(stds)
+            # kf = KFold(n_splits=N_SPLITS)
+            # kf.get_n_splits(combined_X)
+            
+            kf = KFold(n_splits=N_SPLITS, random_state=np.random.RandomState(seed=1149035622), shuffle=True)
+            all_results=[]
+            for i, (train_index, test_index) in enumerate(kf.split(combined_X)):
+                fold_X_train = combined_X[train_index,:]
+                fold_y_train = combined_y[train_index]
+
+                fold_X_test = combined_X[test_index,:]
+                fold_y_test = combined_y[test_index]
+
+
+                print(f'fold_X_train.shape={fold_X_train.shape=}')
+                print(f'fold_y_train.shape={fold_y_train.shape=}')
+                print()
+
+                print(f'fold_X_test.shape={fold_X_test.shape=}')
+                print(f'fold_y_test.shape={fold_y_test.shape=}')
+                print()
+
+                
+
+
+
+                # -----------------------------------------------
+                # ----------------- RE-SAMPLING -----------------
+                # -----------------------------------------------
+                SAMPLING_SEED = 1270833263
+                sampling_random_state=np.random.RandomState(SAMPLING_SEED)
+
+                if configuration_dict['under_sample_majority_class']:
+                    assert not configuration_dict['over_sample_minority_class']
+                    assert not configuration_dict['smote_and_undersampling']
+
+                    under_sampler = RandomUnderSampler(sampling_strategy=1, random_state=sampling_random_state)
+                    print('Under Sampling training set before calling fit ....')
+
+                    # Under sampling:
+                    fold_X_train, fold_y_train = under_sampler.fit_resample(fold_X_train, 
+                                                                            fold_y_train)
+                    print(f'[INSIDE running_all_experiments_csv] resampled(fold_X_train).shape = {fold_X_train.shape}')
+                    print(f'[INSIDE running_all_experiments_csv] resampled(fold_y_train).shape = {fold_y_train.shape}')
+
+                elif configuration_dict['over_sample_minority_class']:
+                    assert not configuration_dict['under_sample_majority_class']
+                    assert not configuration_dict['smote_and_undersampling']
+
+                    over_sample = SMOTE(sampling_strategy=1, random_state=sampling_random_state)
+                    print('[INSIDE running_all_experiments_csv] Over Sampling training set before calling fit ....')
+
+                    fold_X_train, fold_y_train = over_sample.fit_resample(fold_X_train, 
+                                                                          fold_y_train)
+                    print(f'[INSIDE running_all_experiments_csv] resampled(fold_X_train).shape = {fold_X_train.shape}')
+                    print(f'[INSIDE running_all_experiments_csv] resampled(fold_y_train).shape = {fold_y_train.shape}')
+
+                elif configuration_dict['smote_and_undersampling']:
+                    assert not configuration_dict['under_sample_majority_class']
+                    assert not configuration_dict['over_sample_minority_class']
+
+                    over = SMOTE(sampling_strategy=params['over_sampling_ration'],
+                                 random_state=sampling_random_state
+                                 )
+                    under = RandomUnderSampler(sampling_strategy=params['under_sampling_ration'], 
+                                               random_state=sampling_random_state
+                                               )
+                    
+                    steps = [('o', over),
+                             ('u', under)]
+                    
+                    pipeline = Pipeline(steps=steps)
+                    print('[INSIDE running_all_experiments_csv] Applying both under and over sampling ....')
+
+                    fold_X_train, fold_y_train = pipeline.fit_resample(fold_X_train, 
+                                                                       fold_y_train)
+                    print(f'[INSIDE running_all_experiments_csv] resampled(fold_X_train).shape = {fold_X_train.shape}')
+                    print(f'[INSIDE running_all_experiments_csv] resampled(y_train).shape = {fold_y_train.shape}')
+
+                else:
+                    print('[INSIDE running_all_experiments_csv] Using X_train, y_train, no samplig strategy ...')
+                # ------------------------------------------------------
+                # ----------------- END of RE-SAMPLING -----------------
+                # ------------------------------------------------------
+                print('Fitting model')
+
+                
+                model.fit(fold_X_train, fold_y_train)
+
+                # EVALUATION ON TESTING
+                y_true = fold_y_test
+                y_pred = model.predict(fold_X_test)
+                y_score= model.predict_proba(fold_X_test)[:,1] #model.predict_proba(X_train)[:,1]
+
+                results = np.array([
+                    precision_score(y_true, y_pred,),
+                    recall_score(y_true, y_pred,),
+                    f1_score(y_true, y_pred,),
+                    roc_auc_score(y_true=y_true, y_score=y_score),
+                ])
+                all_results.append(results)
+                
+            METRIC_COUNT=4 # Prec, Recall, F1-score, ROC AUC
+            averages = np.average(np.vstack([all_results]), axis=0)
+            print(f'averages.shape={averages.shape}')
+            assert averages.shape[0] == METRIC_COUNT, f'{averages.shape[0]}'
+
+            stds = np.std(np.vstack([all_results]), axis=0)
+            assert stds.shape[0] == METRIC_COUNT, f'{stds.shape[0]}'
+            print(f'stds.shape={stds.shape}')
+
+            columns = ['precision_avg',
+                       'recall_avg', 
+                       'f1_avg', 
+                       'roc_auc_avg',
+                       'precision_std',
+                       'recall_std',
+                       'f1_std',
+                       'roc_auc_std',
+                       ]
+
+
+            results_df = pd.DataFrame(np.hstack([averages, stds]).reshape(1,-1), columns = columns)
+
+
+            # cv_results = cross_validate(model,
+            #                             combined_X,
+            #                             combined_y,
+            #                             cv=3,
+            #                             scoring=['accuracy', 'precision', 'recall', 'f1', 'roc_auc']
+            #                             )
+
+            # cv_results_df = pd.DataFrame(cv_results)
+
+            # averages = pd.DataFrame(np.average(cv_results_df.values, axis=0).reshape(1,-1),
+            #                         columns=[f'{column}_avg' for column in cv_results_df.columns])
+            
+            # stds = pd.DataFrame(np.std(cv_results_df.values, axis=0).reshape(1,-1),
+            #                         columns=[f'{column}_std' for column in cv_results_df.columns])
+            
+            # results_df = averages.join(stds)
 
 
             config_df = pd.DataFrame({'Model': [model_name],

@@ -1,4 +1,19 @@
 """
++--------------------------------------------------------------------------------------------------+
+| NEW DISCLAIMER:                                                                                  |
+| IMPORTANT: Now this module do not work as expected (the under sample and oversample doesn't      |
+| work here)! This module has been deprecated and the correct module to use is                     |
+| **running_all_experiments_cv.py**. Because the responsibility of doing cross validation (CV) is  |
+| on the running_all_experiments_cv, the undersampling and oversampling has to happen after the    |
+| CV splits. Therefore, the undersampling and oversampling happens in the                          |
+| **running_all_experiments_cv.py**, not in the health_data.py module anymore. This script         |
+| running_all_experiments.py (NOT CV version) assumes the undersampling and oversampling stills    |
+| happens in the health_data.py module, but it doesn't any more, the functionality was removed     |
+| from there and moved to the running_all_experiments_cv.py file, but not to this one. Therefore,  |
+| the oversampling and undersamplig doesn't work here. Do not use unless you know what you         |
+| are doing.                                                                                       |
++--------------------------------------------------------------------------------------------------+
+
 This module contains *no* functions to import. It only contains a single main function that runs all 
 Scikit-learn experiments (all models obtained from Scikit-learn that use the fit, predict, and 
 predict_proba methods.)
