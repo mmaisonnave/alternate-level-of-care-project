@@ -2056,7 +2056,6 @@
         "combining_diagnoses": false,
         "combining_interventions": false
     },
-    ...
     "configuration_103": {
         "description": "N+C+D+I + sampling(U(1) O(0.1)) + combined both" ,
         "fix_skew": false,

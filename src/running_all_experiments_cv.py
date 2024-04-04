@@ -96,7 +96,7 @@ from scipy import sparse
 import pandas as pd
 import numpy as np
 import json
-from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, roc_auc_score
+from sklearn.metrics import confusion_matrix, precision_score, recall_score, f1_score, roc_auc_score, accuracy_score
 from sklearn.feature_selection import SelectKBest, f_classif
 from sklearn.model_selection import cross_validate
 from sklearn.model_selection import KFold
@@ -122,14 +122,14 @@ if __name__ == '__main__':
     # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ---------- #
     parser = argparse.ArgumentParser()
     parser.add_argument('--simulation',
-                        dest='simulation', 
+                        dest='simulation',
                         required=True,
                         help='Wether to save to disk or not',
                         type=str,
                         choices=['True', 'False']
                         )
     parser.add_argument('--experiment-configuration',
-                        dest='experiment_configuration', 
+                        dest='experiment_configuration',
                         required=True,
                         help="Choose one particular configuration to run (configuration_name:str) or all ('all')",
                         type=str,
@@ -161,7 +161,6 @@ if __name__ == '__main__':
     experiment_configurations = json.load(open(config['experiments_config'], encoding='utf-8'))
     logging.debug(f'Using {len(model_configurations):4} different models.')
     logging.debug(f'Using {len(experiment_configurations):4} different configurations.')
-
 
     # ---------- ---------- ---------- #
     # COMPUTING TO-DO EXPERIMENTS      #
@@ -225,11 +224,11 @@ if __name__ == '__main__':
         params = configuration_dict
          
         # Computing training and testing matrices.
-        X_train, y_train, X_test, y_test, columns = health_data.Admission.get_train_test_matrices(params)
-        logging.debug(f'X_train.shape = {X_train.shape}')
-        logging.debug(f'y_train.shape = {y_train.shape}')
-        logging.debug(f'X_train.shape = {X_test.shape}')
-        logging.debug(f'y_train.shape = {y_test.shape}')
+        # X, y, columns = health_data.Admission.get_train_test_matrices(params)
+        X, y, columns = health_data.Admission.get_both_matrices(params)
+        logging.debug(f'X.shape = {X.shape}')
+        logging.debug(f'y.shape = {y.shape}')
+
 
 
         # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
@@ -272,26 +271,16 @@ if __name__ == '__main__':
 
             logging.debug(f'Training model {str(model)}')
 
-            if isinstance(X_train, np.ndarray):
-                combined_X = np.vstack([X_train,X_test])
-            else:
-                combined_X = sparse.vstack([X_train,X_test])
 
-            combined_y = np.hstack([y_train, y_test])
+            combined_X = X
+            combined_y = y
 
-            print(f'X_train.shape=    {X_train.shape}')
-            print(f'X_test.shape=     {X_test.shape}')
             print(f'combined_X.shape= {combined_X.shape}')
             print()
 
-            print(f'y_train.shape=    {y_train.shape}')
-            print(f'y_test.shape=     {y_test.shape}')
             print(f'combined_y.shape= {combined_y.shape}')
             print()
             
-            
-            # kf = KFold(n_splits=N_SPLITS)
-            # kf.get_n_splits(combined_X)
             
             kf = KFold(n_splits=N_SPLITS, random_state=np.random.RandomState(seed=1149035622), shuffle=True)
             all_results=[]
@@ -311,15 +300,11 @@ if __name__ == '__main__':
                 print(f'fold_y_test.shape={fold_y_test.shape=}')
                 print()
 
-                
-
-
-
                 # -----------------------------------------------
                 # ----------------- RE-SAMPLING -----------------
                 # -----------------------------------------------
                 SAMPLING_SEED = 1270833263
-                sampling_random_state=np.random.RandomState(SAMPLING_SEED)
+                sampling_random_state = np.random.RandomState(SAMPLING_SEED)
 
                 if configuration_dict['under_sample_majority_class']:
                     assert not configuration_dict['over_sample_minority_class']
@@ -373,9 +358,23 @@ if __name__ == '__main__':
                 # ------------------------------------------------------
                 # ----------------- END of RE-SAMPLING -----------------
                 # ------------------------------------------------------
-                print('Fitting model')
 
-                
+                # --------------------------------------------------------------
+                # ----------------- BEGIN OF FEATURE SELECTION -----------------
+                # --------------------------------------------------------------
+                if 'feature_selection' in configuration_dict and configuration_dict['feature_selection']:
+                    logging.debug('Applying feature selection')
+                    clf = SelectKBest(f_classif, 
+                                      k=configuration_dict['k_best_features'],).fit(fold_X_train,
+                                                                                    fold_y_train)
+                    fold_X_train = clf.transform(fold_X_train)
+                    fold_X_test = clf.transform(fold_X_test)
+                    columns = clf.transform(columns.reshape(1,-1))[0,:]
+
+                # --------------------------------------------------------------
+                # -----------------  END OF FEATURE SELECTION  -----------------
+                # --------------------------------------------------------------
+                print('Fitting model')
                 model.fit(fold_X_train, fold_y_train)
 
                 # EVALUATION ON TESTING
@@ -384,6 +383,7 @@ if __name__ == '__main__':
                 y_score= model.predict_proba(fold_X_test)[:,1] #model.predict_proba(X_train)[:,1]
 
                 results = np.array([
+                    accuracy_score(y_true, y_pred,),
                     precision_score(y_true, y_pred,),
                     recall_score(y_true, y_pred,),
                     f1_score(y_true, y_pred,),
@@ -400,10 +400,12 @@ if __name__ == '__main__':
             assert stds.shape[0] == METRIC_COUNT, f'{stds.shape[0]}'
             print(f'stds.shape={stds.shape}')
 
-            columns = ['precision_avg',
+            columns = ['accuracy_avg'
+                       'precision_avg',
                        'recall_avg', 
                        'f1_avg', 
                        'roc_auc_avg',
+                       'accuracy_std',
                        'precision_std',
                        'recall_std',
                        'f1_std',
@@ -413,23 +415,6 @@ if __name__ == '__main__':
 
             results_df = pd.DataFrame(np.hstack([averages, stds]).reshape(1,-1), columns = columns)
 
-
-            # cv_results = cross_validate(model,
-            #                             combined_X,
-            #                             combined_y,
-            #                             cv=3,
-            #                             scoring=['accuracy', 'precision', 'recall', 'f1', 'roc_auc']
-            #                             )
-
-            # cv_results_df = pd.DataFrame(cv_results)
-
-            # averages = pd.DataFrame(np.average(cv_results_df.values, axis=0).reshape(1,-1),
-            #                         columns=[f'{column}_avg' for column in cv_results_df.columns])
-            
-            # stds = pd.DataFrame(np.std(cv_results_df.values, axis=0).reshape(1,-1),
-            #                         columns=[f'{column}_std' for column in cv_results_df.columns])
-            
-            # results_df = averages.join(stds)
 
 
             config_df = pd.DataFrame({'Model': [model_name],
