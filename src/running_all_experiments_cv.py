@@ -391,7 +391,7 @@ if __name__ == '__main__':
                 ])
                 all_results.append(results)
                 
-            METRIC_COUNT=4 # Prec, Recall, F1-score, ROC AUC
+            METRIC_COUNT = 5 # Acc, Prec, Recall, F1-score, ROC AUC
             averages = np.average(np.vstack([all_results]), axis=0)
             print(f'averages.shape={averages.shape}')
             assert averages.shape[0] == METRIC_COUNT, f'{averages.shape[0]}'
@@ -400,7 +400,7 @@ if __name__ == '__main__':
             assert stds.shape[0] == METRIC_COUNT, f'{stds.shape[0]}'
             print(f'stds.shape={stds.shape}')
 
-            columns = ['accuracy_avg'
+            columns = ['accuracy_avg',
                        'precision_avg',
                        'recall_avg', 
                        'f1_avg', 
