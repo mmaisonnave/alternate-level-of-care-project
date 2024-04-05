@@ -59,7 +59,6 @@ def _get_metric_evaluations(evaluated_model, X, y_true, model_config_name, descr
 
 
 if __name__ == '__main__':
-
     parser = argparse.ArgumentParser()
     parser.add_argument('--ignore-diag-and-interv',
                         dest='ignore_diag_and_interv',
@@ -70,16 +69,19 @@ if __name__ == '__main__':
                         )
     args = parser.parse_args()
 
-
+    
     SEED = 1593085724
-
-
     IGNORING_DIAG_AND_INTERV= args.ignore_diag_and_interv == 'True'
+    EXPERIMENT_CONFIGURATION_NAME = 'configuration_91'
+    MODEL_CONFIGURATION_NAME='model_305'
+    PERMUTATION_REPETITION_COUNT=10
+
+
+
     print(f'IGNORING_DIAG_AND_INTERV={IGNORING_DIAG_AND_INTERV}')
 
     config = configuration.get_config()
 
-    EXPERIMENT_CONFIGURATION_NAME = 'configuration_82'
     experiment_configurations = json.load(open(config['experiments_config'], encoding='utf-8'))
     X_train, y_train, X_test, y_test, feature_names = health_data.Admission.get_train_test_matrices(experiment_configurations[EXPERIMENT_CONFIGURATION_NAME])
     print(f'X_train.shape={X_train.shape}')
@@ -109,7 +111,6 @@ if __name__ == '__main__':
         print(f'y_test.shape= {y_test.shape}')
 
         print('Training new BRF model with new X_train and X_test')
-        MODEL_CONFIGURATION_NAME='model_300'
         brf = configuration.model_from_configuration_name(MODEL_CONFIGURATION_NAME)
         print(f'Training model MODEL_CONFIGURATION_NAME={MODEL_CONFIGURATION_NAME} ...')
         brf.fit(X_train, y_train)
@@ -119,24 +120,21 @@ if __name__ == '__main__':
             _get_metric_evaluations(brf, X_test, y_test, MODEL_CONFIGURATION_NAME, description='Main BRF only cat and num (test)')
         ])
 
+        
+        print(df[['Precision', 'Recal', 'F1-Score', 'AUC']])
+
         df.to_csv(config['brf_with_cat_and_num'],
                 index=True)
     else: 
         brf = joblib.load(config['balanced_random_forest_path'])
 
 
-    # ##   DEBUG   ##
-    # X_test = X_test[:10000, :100]
-    # y_test = y_test[:10000,]
-    # feature_names = feature_names[:100]
-    # brf.fit(X_test, y_test)
-    # ## END DEBUG ##
 
     print('Computing permutation feature importance ...')
     r = permutation_importance(brf,
                             X_test.toarray(),
                             y_test,
-                            n_repeats=15,
+                            n_repeats=PERMUTATION_REPETITION_COUNT,
                             scoring='roc_auc',
                             random_state=np.random.RandomState(seed=SEED))
     print('Permutation feature importance computation finished, formating results. ')

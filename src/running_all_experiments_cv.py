@@ -225,9 +225,10 @@ if __name__ == '__main__':
          
         # Computing training and testing matrices.
         # X, y, columns = health_data.Admission.get_train_test_matrices(params)
-        X, y, columns = health_data.Admission.get_both_matrices(params)
-        logging.debug(f'X.shape = {X.shape}')
-        logging.debug(f'y.shape = {y.shape}')
+        X, y, feature_names = health_data.Admission.get_both_matrices(params)
+        print(f'X.shape = {X.shape}')
+        print(f'y.shape = {y.shape}')
+        print(f'feature_names.shape = {feature_names.shape}')
 
 
 
@@ -291,9 +292,12 @@ if __name__ == '__main__':
                 fold_X_test = combined_X[test_index,:]
                 fold_y_test = combined_y[test_index]
 
+                fold_feature_names = feature_names.copy()
+
 
                 print(f'fold_X_train.shape={fold_X_train.shape=}')
                 print(f'fold_y_train.shape={fold_y_train.shape=}')
+                print(f'fold_feature_names.shape={fold_feature_names.shape=}')
                 print()
 
                 print(f'fold_X_test.shape={fold_X_test.shape=}')
@@ -359,21 +363,57 @@ if __name__ == '__main__':
                 # ----------------- END of RE-SAMPLING -----------------
                 # ------------------------------------------------------
 
+                # 
+                # AFTER DOING RESAMPLING, some columns now might be constant (only instances with  a 
+                # certain value=v were selcted)
+                # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+                # REMOVING CONSTANT VARIABLES (CHANGING NUMBER OF COLUMNS, need to update all matrices)
+                # ---------- ---------- ---------- ---------- ---------- ---------- ---------- ----------
+                logging.debug('Looking for constant variables ...')
+                fold_feature_names = np.array(fold_feature_names) 
+
+
+                logging.debug('Using memory efficient solution')
+                constant_variables = np.array(list(
+                    map(lambda ix: True if np.var(fold_X_train[:,ix].toarray())==0 else False, range(fold_X_train.shape[1]))
+                ))
+
+
+                if np.sum(constant_variables)>0:
+                    print(f'Removing {np.sum(constant_variables)} constant variables ...')
+                    # X = X[:,~constant_variables]
+                    fold_X_train = fold_X_train[:,~constant_variables]
+                    fold_X_test = fold_X_test[:,~constant_variables]
+                    fold_feature_names = fold_feature_names[~constant_variables]
+                    print(f'Removed {np.sum(constant_variables)} columns')
+                else:
+                    print('Not constant variables found ...')
+                # ---------- ---------- ---------- ---------- ---------- ---------- #
+                #           END OF REMOVING CONSTANT VARIABLES                      #
+                # ---------- ---------- ---------- ---------- ---------- ---------- #
+
                 # --------------------------------------------------------------
                 # ----------------- BEGIN OF FEATURE SELECTION -----------------
                 # --------------------------------------------------------------
                 if 'feature_selection' in configuration_dict and configuration_dict['feature_selection']:
-                    logging.debug('Applying feature selection')
+                    print('Applying feature selection')
                     clf = SelectKBest(f_classif, 
                                       k=configuration_dict['k_best_features'],).fit(fold_X_train,
                                                                                     fold_y_train)
+                    print()
+                    assert len(fold_feature_names) == fold_X_train.shape[1], f'{len(fold_feature_names)} != {fold_X_train.shape[1]}'
                     fold_X_train = clf.transform(fold_X_train)
-                    fold_X_test = clf.transform(fold_X_test)
-                    columns = clf.transform(columns.reshape(1,-1))[0,:]
+                    fold_X_test = clf.transform(fold_X_test)               
+                    fold_feature_names = clf.transform(fold_feature_names.reshape(1,-1))[0,:]     
+                    assert len(fold_feature_names) == fold_X_train.shape[1], f'{len(fold_feature_names)} != {fold_X_train.shape[1]}'
+
+                    print(f'fold_X_train.shape={fold_X_train.shape}')
+                    print(f'fold_X_test.shape= {fold_X_test.shape}')
+                    print(f'fold_feature_names.shape=     {fold_feature_names.shape}')
 
                 # --------------------------------------------------------------
                 # -----------------  END OF FEATURE SELECTION  -----------------
-                # --------------------------------------------------------------
+                # --------------------------------------------------------------                
                 print('Fitting model')
                 model.fit(fold_X_train, fold_y_train)
 

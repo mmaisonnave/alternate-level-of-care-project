@@ -1,5 +1,13 @@
 """
 +--------------------------------------------------------------------------------------------------+
+| NEWER DISCLAIMER (2024-04-04):                                                                   |
+| The undersampling and oversampling was added back. Now there are two methods:                    |
+|       - create_both_matrices(...): do not does oversampling, undersampling or feature selection) |
+|         Instead, that functionality is performed in running_all_experiments_cv.                  |
+|       - get_train_test_matrices does perform feature selection, overesampling and undersampling  |
+|         as it is expected to be used with running_all_experiments.py (which doesn't do any of    |
+|         that)                                                                                    |
++--------------------------------------------------------------------------------------------------+
 | NEW DISCLAIMER:                                                                                  |
 | IMPORTANT: Now this module do not work as expected (the under sample and oversample doesn't      |
 | work here)! This module has been deprecated and the correct module to use is                     |
