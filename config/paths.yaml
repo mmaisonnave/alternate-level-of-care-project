@@ -58,6 +58,7 @@ train_val_json: ["$data_path", "2015_2022/train_validation.json"]
 heldout_json: ["$data_path", "2015_2022/heldout.json"]
 unused_after_heldout_json: ["$data_path", "2015_2022/unused_after_held_out.json"]
 encrypted_train_val_json: ["$data_path", "2015_2022/train_validation.json.encryption"]
+encrypted_heldout_json: ["$data_path", "2015_2022/heldout.json.encryption"]
 
 
 unified_merged_file_cz: ["$data_path", "2015_2022/full_cz_database.csv"]
@@ -88,16 +89,25 @@ surrogate_logreg_coefficients: ["$repository_path", "results/surrogate_logreg_co
 # Latests results
 explainable_logreg_coefficients: ["$repository_path", "results/explainable_logreg_coefficients.csv"]
 explainable_logreg_metrics: ["$repository_path", "results/explainable_logreg_metrics.csv"]
+explainable_logit_metrics: ["$repository_path", "results/explainable_logit_metrics.csv"]
+explainable_logit_coefficients: ["$repository_path", "results/explainable_logit_coefficients.csv"]
+
+
 
 explainable_dt_metrics: ["$repository_path", "results/explainable_dt_metrics.csv"]
 explainable_dt_figures: ["$figures_folder", "explainable_decision_tree.jpg"]
 
+feature_ranking_plot: ["$figures_folder", "feature_ranking_plot.jpg"]
+
 
 shap_on_brf_figures: ["$figures_folder", "shap_on_brf_figures.jpg"]
+brf_on_shap_metrics: ["$repository_path", "results/brf_on_shap_metrics.csv"]
+pdp_model_performance: ["$repository_path", "results/pdp_model_performance.csv"]
 
 
 # BRF with cat and num 
-brf_with_cat_and_num: ["$repository_path", "results/brf_with_cat_and_num.csv"]
+permutation_brf_with_cat_and_num: ["$repository_path", "results/permutation_brf_with_cat_and_num.csv"]
+permutation_brf_all_features: ["$repository_path", "results/permutation_brf_all_features.csv"]
 
 # Only input
 keyfile: ["$repository_path", "config/alc.key"]

@@ -225,7 +225,7 @@ if __name__ == '__main__':
          
         # Computing training and testing matrices.
         # X, y, columns = health_data.Admission.get_train_test_matrices(params)
-        X, y, feature_names = health_data.Admission.get_both_matrices(params)
+        X, y, feature_names = health_data.Admission.get_both_train_test_matrices(params)
         print(f'X.shape = {X.shape}')
         print(f'y.shape = {y.shape}')
         print(f'feature_names.shape = {feature_names.shape}')

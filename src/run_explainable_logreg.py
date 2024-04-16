@@ -4,7 +4,7 @@ import numpy as np
 
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
-from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
+from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix,accuracy_score
 
 import sys
 sys.path.append('..')
@@ -12,8 +12,8 @@ from utilities import configuration
 from utilities import health_data
 
 if __name__ == '__main__':
-    EXPERIMENT_CONFIGURATION_NAME='configuration_84' # All binary features, min_df=2, with feature selection 7500
-    MODEL_CONFIGURATION_NAME = 'model_302' # LogReg, balanced, max_iter=15,000
+    EXPERIMENT_CONFIGURATION_NAME='configuration_93' # All binary features, min_df=2, with feature selection 7500
+    MODEL_CONFIGURATION_NAME = 'model_316' # (N)+(C)+(I)+ Combined D (CD) + class balanced weights
 
     print(f'Using EXPERIMENT_CONFIGURATION_NAME={EXPERIMENT_CONFIGURATION_NAME}')
     print(f'Using MODEL_CONFIGURATION_NAME=     {MODEL_CONFIGURATION_NAME}')
@@ -49,6 +49,7 @@ if __name__ == '__main__':
 
         tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
         results = {'Description': description,
+                            'Accuracy': accuracy_score(y_true, y_pred),
                             'Precision': precision_score(y_true, y_pred),
                             'Recal': recall_score(y_true, y_pred),
                             'F1-Score': f1_score(y_true, y_pred),

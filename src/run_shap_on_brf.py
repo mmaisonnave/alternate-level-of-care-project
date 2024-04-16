@@ -13,10 +13,22 @@ import shap
 
 import matplotlib.pyplot as plt
 
+def _capitalize_feature_name(feature_name:str)->str:
+    if feature_name=='cmg':
+        return 'CMG'
+    elif feature_name=='case_weight':
+        return 'RIW'
+    else:
+        aux = feature_name.replace('_', ' ').replace('-', ' ').strip()
+        if aux.split(' ')=='':
+            print('Error')
+            print(aux)
+        return ' '.join([word[0].upper()+word[1:] for word in aux.split(' ')])
+    
 
 if __name__ == "__main__":
-    SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION=10000
-    SAMPLE_SIZE_TO_COMPUT_SHAP_ON=100000
+    SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION=10
+    SAMPLE_SIZE_TO_COMPUT_SHAP_ON=10
     EXPERIMENT_CONFIGURATION_NAME = 'configuration_91' # (N)+(C)+(D)+(I) with U(1.0) and O(0.1)
     MODEL_CONFIGURATION_NAME ="model_305" # BRF, not balanced
     FROM_DISK = False # If true, MODEL_CONFIGURATION_NAME not used.
@@ -57,6 +69,11 @@ if __name__ == "__main__":
                                         MODEL_CONFIGURATION_NAME,
                                         experiment_config_name=EXPERIMENT_CONFIGURATION_NAME,
                                         description='TEST')])
+    
+    csv_name = config['brf_on_shap_metrics'][:-len(".csv")]
+    csv_name = csv_name + f'_BGD={SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION}'
+    csv_name = csv_name + f'_SS={SAMPLE_SIZE_TO_COMPUT_SHAP_ON}.jpg'
+    df.to_csv(csv_name, index=False)
 
     print(df[['Precision', 'Recal', 'F1-Score', 'AUC']])
 
@@ -69,7 +86,7 @@ if __name__ == "__main__":
     print('Creating explainer ...')
     explainer = shap.Explainer(brf.predict,
                                sampled_X,
-                               feature_names=feature_names,
+                               feature_names=list(map(_capitalize_feature_name, feature_names)),
                                )
 
     print('Calculating SHAP VALUES')
@@ -84,9 +101,13 @@ if __name__ == "__main__":
 
     fig, ax = plt.gcf(), plt.gca()
 
+
     figure_name = config['shap_on_brf_figures'][:-len(".jpg")]
     figure_name = figure_name + f'_BGD={SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION}'
     figure_name = figure_name + f'_SS={SAMPLE_SIZE_TO_COMPUT_SHAP_ON}.jpg'
+
+    ax.tick_params(axis='both', which='major', labelsize=14)
+    ax.tick_params(axis='both', which='minor', labelsize=14)
 
     fig.savefig(figure_name,
                 bbox_inches='tight')

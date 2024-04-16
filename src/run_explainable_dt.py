@@ -10,16 +10,28 @@ from utilities import configuration
 from utilities import health_data
 import json
 
+def _capitalize_feature_name(feature_name:str)->str:
+    if feature_name=='cmg':
+        return 'CMG'
+    elif feature_name=='case_weight':
+        return 'RIW'
+    else:
+        aux = feature_name.replace('_', ' ').replace('-', ' ').strip()
+        if aux.split(' ')=='':
+            print('Error')
+            print(aux)
+        return ' '.join([word[0].upper()+word[1:] for word in aux.split(' ')])
+
+
 
 if __name__ == '__main__':
-    EXPERIMENT_CONFIGURATION_NAMES = [('configuration_27', 'numerical'),
-                                      ('configuration_28', 'categorical'),
-                                      ('configuration_87','numerical + categorical'),
-                                      ('configuration_85', 'intervention'),
-                                      ('configuration_86', 'diagnosis'),
-                                      ('configuration_82', 'all dummies')
+    EXPERIMENT_CONFIGURATION_NAMES = [('configuration_27_under_and_over', '(N)'),      #  + U(1.0) + O(0.1)
+                                      ('configuration_28_under_and_over', '(C)'),      # + U(1.0) + O(0.1)
+                                      ('configuration_87_under_and_over','(N)_(C)'), # + U(1.0) + O(0.1)
+                                      ('configuration_30_under_and_over', '(I)'),      #  + U(1.0) + O(0.1)
+                                      ('configuration_29_under_and_over', '(D)'),      #  + U(1.0) + O(0.1)
+                                      ('configuration_31_under_and_over', '(N)_(C)_(D)_(I)') # + U(1.0) + O(0.1)
                                       ]
-    
     config = configuration.get_config()
     metric_dfs=[]
     for experiment_configuration_name, experiment_configuration_description in EXPERIMENT_CONFIGURATION_NAMES:
@@ -35,7 +47,7 @@ if __name__ == '__main__':
         print(f'y_test.shape= {y_test.shape}')
         print()
 
-        DT_MODEL_CONFIGURATION_NAME = 'model_301'
+        DT_MODEL_CONFIGURATION_NAME = 'model_344'
         print(f'DT_MODEL_CONFIGURATION_NAME={DT_MODEL_CONFIGURATION_NAME}')
         dt_model = configuration.model_from_configuration_name(DT_MODEL_CONFIGURATION_NAME)
         dt_model.fit(X_train, y_train)
@@ -78,20 +90,20 @@ if __name__ == '__main__':
 
 
 
-        fig, ax = plt.subplots(figsize=(20,10))
+        fig, ax = plt.subplots(figsize=(14,7))
         tree.plot_tree(dt_model,
-                    feature_names=list(features_names),
+                    feature_names=list(map(_capitalize_feature_name, features_names)),
                     class_names=['NR', 'R'],
-                    fontsize=9,
+                    fontsize=13,
                     impurity=False,
                     label='none',
                     filled=True,
+                    node_ids=False,
                     )
-        
+
         output_file = config['explainable_dt_figures'].replace('.jpg', f'_{experiment_configuration_description}.jpg')
 
         fig.savefig(output_file, bbox_inches='tight')
 
     df = pd.concat(metric_dfs)
     df.to_csv(config['explainable_dt_metrics'], index=None)
-        

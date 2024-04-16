@@ -123,11 +123,31 @@ if __name__ == '__main__':
         
         print(df[['Precision', 'Recal', 'F1-Score', 'AUC']])
 
-        df.to_csv(config['brf_with_cat_and_num'],
+        df.to_csv(config['permutation_brf_with_cat_and_num'],
                 index=True)
     else: 
-        brf = joblib.load(config['balanced_random_forest_path'])
+        print('Using all features')
+        print(f'X_train.shape={X_train.shape}')
+        print(f'y_train.shape={y_train.shape}')
+        print()
+        print(f'X_test.shape= {X_test.shape}')
+        print(f'y_test.shape= {y_test.shape}')
 
+        print('Training new BRF model with new X_train and X_test')
+        brf = configuration.model_from_configuration_name(MODEL_CONFIGURATION_NAME)
+        print(f'Training model MODEL_CONFIGURATION_NAME={MODEL_CONFIGURATION_NAME} ...')
+        brf.fit(X_train, y_train)
+        print('Storing performance of new BRF model')
+        df = pd.concat([
+            _get_metric_evaluations(brf, X_train, y_train, MODEL_CONFIGURATION_NAME, description='Main BRF only cat and num (train)'),
+            _get_metric_evaluations(brf, X_test, y_test, MODEL_CONFIGURATION_NAME, description='Main BRF only cat and num (test)')
+        ])
+
+        
+        print(df[['Precision', 'Recal', 'F1-Score', 'AUC']])
+
+        df.to_csv(config['permutation_brf_all_features'],
+                index=True)
 
 
     print('Computing permutation feature importance ...')
@@ -147,7 +167,7 @@ if __name__ == '__main__':
     columns = list(columns[-1:]) + list(columns[:-1])
     results = results[columns]
 
-    results = results.sort_values(by='importances_mean', 
+    results = results.sort_values(by='importances_mean',
                                   ascending=False)
 
     output_filename = config['permutation_feature_importance_results']
