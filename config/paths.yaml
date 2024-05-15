@@ -5,6 +5,7 @@
 # data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
 repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
 data_path: /home/maiso/cbu/data
+
 # ---
 
 # SAVED MODELS
@@ -88,10 +89,16 @@ surrogate_logreg_coefficients: ["$repository_path", "results/surrogate_logreg_co
 
 # Latests results
 explainable_logreg_coefficients: ["$repository_path", "results/explainable_logreg_coefficients.csv"]
+explainable_logreg_coefficients_with_pvalues: ["$repository_path", "results/explainable_logreg_coefficients_with_pvalues.csv"]
+
 explainable_logreg_metrics: ["$repository_path", "results/explainable_logreg_metrics.csv"]
+explainable_logreg_model: ["$repository_path", "checkpoints/explainable_logreg.joblib"]
+
 explainable_logit_metrics: ["$repository_path", "results/explainable_logit_metrics.csv"]
 explainable_logit_coefficients: ["$repository_path", "results/explainable_logit_coefficients.csv"]
 
+
+intervention_and_diagnosis_frequencies: ["$repository_path", "results/intervention_and_diagnosis_frequencies.csv"]
 
 
 explainable_dt_metrics: ["$repository_path", "results/explainable_dt_metrics.csv"]
@@ -103,6 +110,11 @@ feature_ranking_plot: ["$figures_folder", "feature_ranking_plot.jpg"]
 shap_on_brf_figures: ["$figures_folder", "shap_on_brf_figures.jpg"]
 brf_on_shap_metrics: ["$repository_path", "results/brf_on_shap_metrics.csv"]
 pdp_model_performance: ["$repository_path", "results/pdp_model_performance.csv"]
+
+
+custom_explainable_dt_metrics: ["$repository_path", "results/custom_explainable_dt_metrics.csv"]
+custon_explainable_dt_figures: ["$figures_folder", "custon_explainable_dt_figures.jpg"]
+
 
 
 # BRF with cat and num 

@@ -72,8 +72,8 @@ if __name__ == '__main__':
     
     SEED = 1593085724
     IGNORING_DIAG_AND_INTERV= args.ignore_diag_and_interv == 'True'
-    EXPERIMENT_CONFIGURATION_NAME = 'configuration_91'
-    MODEL_CONFIGURATION_NAME='model_305'
+    EXPERIMENT_CONFIGURATION_NAME = 'configuration_93' # (N)+(C)+(I)+ Combined D (CD)
+    MODEL_CONFIGURATION_NAME='model_312' # BRF, balanced
     PERMUTATION_REPETITION_COUNT=10
 
 

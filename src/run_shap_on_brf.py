@@ -27,10 +27,10 @@ def _capitalize_feature_name(feature_name:str)->str:
     
 
 if __name__ == "__main__":
-    SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION=10
-    SAMPLE_SIZE_TO_COMPUT_SHAP_ON=10
-    EXPERIMENT_CONFIGURATION_NAME = 'configuration_91' # (N)+(C)+(D)+(I) with U(1.0) and O(0.1)
-    MODEL_CONFIGURATION_NAME ="model_305" # BRF, not balanced
+    SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION=500
+    SAMPLE_SIZE_TO_COMPUT_SHAP_ON=500
+    EXPERIMENT_CONFIGURATION_NAME = 'configuration_93' # (N)+(C)+(I)+ Combined D (CD)
+    MODEL_CONFIGURATION_NAME ="model_312" # BRF, balanced
     FROM_DISK = False # If true, MODEL_CONFIGURATION_NAME not used.
 
     config = configuration.get_config()
@@ -72,7 +72,7 @@ if __name__ == "__main__":
     
     csv_name = config['brf_on_shap_metrics'][:-len(".csv")]
     csv_name = csv_name + f'_BGD={SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION}'
-    csv_name = csv_name + f'_SS={SAMPLE_SIZE_TO_COMPUT_SHAP_ON}.jpg'
+    csv_name = csv_name + f'_SS={SAMPLE_SIZE_TO_COMPUT_SHAP_ON}.csv'
     df.to_csv(csv_name, index=False)
 
     print(df[['Precision', 'Recal', 'F1-Score', 'AUC']])
@@ -94,6 +94,10 @@ if __name__ == "__main__":
                             max_evals=2*X_test.shape[1]+1,
                             )
 
+
+    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    # ~ Default beeswarm plot ~
+    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
     print(f'shap_values.shape={shap_values.shape}')
     shap.plots.beeswarm(shap_values,
                         max_display=30,
@@ -105,6 +109,43 @@ if __name__ == "__main__":
     figure_name = config['shap_on_brf_figures'][:-len(".jpg")]
     figure_name = figure_name + f'_BGD={SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION}'
     figure_name = figure_name + f'_SS={SAMPLE_SIZE_TO_COMPUT_SHAP_ON}.jpg'
+
+    ax.tick_params(axis='both', which='major', labelsize=14)
+    ax.tick_params(axis='both', which='minor', labelsize=14)
+
+    fig.savefig(figure_name,
+                bbox_inches='tight')
+    
+
+    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    # ~ Absolute beeswarm plot  ~
+    # ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~ ~
+    shap.plots.beeswarm(shap_values.abs, 
+                        max_display=30,
+                        color="shap_red")
+
+    figure_name = config['shap_on_brf_figures'][:-len(".jpg")]
+    figure_name = figure_name + f'_BGD={SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION}'
+    figure_name = figure_name + f'_SS={SAMPLE_SIZE_TO_COMPUT_SHAP_ON}_abs.jpg'
+
+    ax.tick_params(axis='both', which='major', labelsize=14)
+    ax.tick_params(axis='both', which='minor', labelsize=14)
+
+    fig.savefig(figure_name,
+                bbox_inches='tight')
+    
+
+    # ~ ~ ~ ~ ~ ~ ~ 
+    # ~ bar plot  ~
+    # ~ ~ ~ ~ ~ ~ ~
+    shap.plots.bar(shap_values.abs.mean(0),
+                    max_display=30
+                   )
+
+
+    figure_name = config['shap_on_brf_figures'][:-len(".jpg")]
+    figure_name = figure_name + f'_BGD={SAMPLE_SIZE_FOR_BACKGROUND_DISTRIBUTION}'
+    figure_name = figure_name + f'_SS={SAMPLE_SIZE_TO_COMPUT_SHAP_ON}_bar.jpg'
 
     ax.tick_params(axis='both', which='major', labelsize=14)
     ax.tick_params(axis='both', which='minor', labelsize=14)

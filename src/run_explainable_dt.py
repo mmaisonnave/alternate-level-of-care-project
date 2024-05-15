@@ -25,12 +25,12 @@ def _capitalize_feature_name(feature_name:str)->str:
 
 
 if __name__ == '__main__':
-    EXPERIMENT_CONFIGURATION_NAMES = [('configuration_27_under_and_over', '(N)'),      #  + U(1.0) + O(0.1)
-                                      ('configuration_28_under_and_over', '(C)'),      # + U(1.0) + O(0.1)
-                                      ('configuration_87_under_and_over','(N)_(C)'), # + U(1.0) + O(0.1)
-                                      ('configuration_30_under_and_over', '(I)'),      #  + U(1.0) + O(0.1)
-                                      ('configuration_29_under_and_over', '(D)'),      #  + U(1.0) + O(0.1)
-                                      ('configuration_31_under_and_over', '(N)_(C)_(D)_(I)') # + U(1.0) + O(0.1)
+    EXPERIMENT_CONFIGURATION_NAMES = [('configuration_27', '(N)'),      #  + U(1.0) + O(0.1)
+                                      ('configuration_28', '(C)'),      # + U(1.0) + O(0.1)
+                                      ('configuration_87','(N)_(C)'), # + U(1.0) + O(0.1)
+                                      ('configuration_30', '(I)'),      #  + U(1.0) + O(0.1)
+                                      ('configuration_29_combined', 'Combined D (CD)'), #  +Combined D (CD)
+                                      ('configuration_93', '(N)_(C)_(D)_(I)') #(N)+(C)+(I)+ Combined D (CD)
                                       ]
     config = configuration.get_config()
     metric_dfs=[]
@@ -47,7 +47,7 @@ if __name__ == '__main__':
         print(f'y_test.shape= {y_test.shape}')
         print()
 
-        DT_MODEL_CONFIGURATION_NAME = 'model_344'
+        DT_MODEL_CONFIGURATION_NAME = 'model_315_depth_3'
         print(f'DT_MODEL_CONFIGURATION_NAME={DT_MODEL_CONFIGURATION_NAME}')
         dt_model = configuration.model_from_configuration_name(DT_MODEL_CONFIGURATION_NAME)
         dt_model.fit(X_train, y_train)

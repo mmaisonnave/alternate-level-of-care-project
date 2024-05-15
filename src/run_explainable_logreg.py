@@ -1,7 +1,9 @@
 import json
 import pandas as pd
 import numpy as np
+import joblib
 
+import scipy
 from sklearn.linear_model import LogisticRegression
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix,accuracy_score
@@ -10,6 +12,29 @@ import sys
 sys.path.append('..')
 from utilities import configuration
 from utilities import health_data
+
+
+def _logit_pvalue(model, x):
+    """ Calculate z-scores for scikit-learn LogisticRegression.
+     parameters:
+     model: fitted sklearn.linear_model.LogisticRegression with intercept and large C
+        x:     matrix on which the model was fit
+            This function uses asymtptics for maximum likelihood estimates.
+    """
+    p = model.predict_proba(x)
+    n = len(p)
+    m = len(model.coef_[0]) + 1
+    coefs = np.concatenate([model.intercept_, model.coef_[0]])
+    x_full = np.matrix(np.insert(np.array(x), 0, 1, axis = 1))
+    ans = np.zeros((m, m))
+    for i in range(n):
+        ans = ans + np.dot(np.transpose(x_full[i, :]), x_full[i, :]) * p[i,1] * p[i, 0]
+    vcov = np.linalg.inv(np.matrix(ans))
+    se = np.sqrt(np.diag(vcov))
+    t =  coefs/se
+    p = (1 - scipy.stats.norm.cdf(abs(t))) * 2
+    return p
+
 
 if __name__ == '__main__':
     EXPERIMENT_CONFIGURATION_NAME='configuration_93' # All binary features, min_df=2, with feature selection 7500
@@ -41,9 +66,9 @@ if __name__ == '__main__':
 
     print('Training data ...')
     logreg.fit(X_train, y_train)
+    joblib.dump(logreg, config['explainable_logreg_model'])
 
-
-    def _get_metric_evaluations(evaluated_model, X, y_true, model_config_name, description=''):
+    def _get_metric_evaluations(evaluated_model, X, y_true, model_config_name, experiment_config_name, description=''):
         y_pred = evaluated_model.predict(X)
         y_score = evaluated_model.predict_proba(X)[:,1]
 
@@ -58,23 +83,22 @@ if __name__ == '__main__':
                             'TP': tp,
                             'FN': fn,
                             'FP': fp,
-                            'Model config': model_config_name
+                            'Model config': model_config_name,
+                            'Experiment config': experiment_config_name
                             }
         results = {key: [results[key]] for key in results}
         return pd.DataFrame(results)
 
     print('Computing model results ...')
-    df = pd.concat([_get_metric_evaluations(logreg, X_train, y_train, MODEL_CONFIGURATION_NAME, description='LogReg train'),
-                    _get_metric_evaluations(logreg, X_test, y_test, MODEL_CONFIGURATION_NAME, description='LogReg test')])
+    df = pd.concat([_get_metric_evaluations(logreg, X_train, y_train, MODEL_CONFIGURATION_NAME, EXPERIMENT_CONFIGURATION_NAME, description='LogReg train'),
+                    _get_metric_evaluations(logreg, X_test, y_test, MODEL_CONFIGURATION_NAME, EXPERIMENT_CONFIGURATION_NAME, description='LogReg test')])
 
 
     df.to_csv(config['explainable_logreg_metrics'], index=False)
 
-
     print('Formating and storing resuts ...')
     diagnosis_mapping = health_data.Admission.get_diagnoses_mapping()
     intervention_mapping = health_data.Admission.get_intervention_mapping()
-
 
     def code2description(code):
         if code.upper() in diagnosis_mapping or code in diagnosis_mapping:
@@ -91,14 +115,18 @@ if __name__ == '__main__':
     scored_feature_names = list(zip(list(logreg.coef_[0,:]),
                                     features_names))
 
-    scored_feature_names = sorted(scored_feature_names, 
-                                key=lambda x:np.abs(x[0]), reverse=True)
+    # scored_feature_names = sorted(scored_feature_names, 
+    #                             key=lambda x:np.abs(x[0]), reverse=True)
 
     coefficients_df = pd.DataFrame(scored_feature_names,
                                 columns=['Score', 'Feature Name'])
 
     coefficients_df = coefficients_df[['Feature Name', 'Score']]
     coefficients_df['Code Description'] = list(map(code2description, coefficients_df['Feature Name']))
+
+
+    # I could never run this process, it dies, 7 days is not enough time to run this part. Pvalues are not computed
+    # coefficients_df['pvalues'] = _logit_pvalue(logreg, X_train)
 
     coefficients_df.to_csv(config['explainable_logreg_coefficients'], index=False)
     print('DONE')

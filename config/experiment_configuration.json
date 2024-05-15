@@ -2298,5 +2298,25 @@
         "combining_interventions": false,
         "under_sampling_ration":1.0,
         "over_sampling_ration":0.1
+    },
+    "configuration_29_combined": {
+        "description": "Only combined Diagnosis" ,
+        "fix_skew": false,
+        "normalize": false,
+        "fix_missing_in_testing": true,
+        "numerical_features": false,
+        "categorical_features": false,
+        "diagnosis_features": true,
+        "intervention_features": false,
+        "use_idf": false,
+        "class_balanced": false,
+        "remove_outliers": false,
+        "under_sample_majority_class": false,
+        "over_sample_minority_class": false,
+        "smote_and_undersampling":false,
+        "diagnosis_embeddings": false,
+        "intervention_embeddings": false,
+        "combining_diagnoses": true,
+        "combining_interventions": false
     }
 }
