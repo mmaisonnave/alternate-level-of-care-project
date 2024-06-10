@@ -1,10 +1,10 @@
 # ----------- #
 # MAIN PATHS: #
 # ----------- #
-# repository_path: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
-# data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
-repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
-data_path: /home/maiso/cbu/data
+repository_path: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
+data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
+# repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
+# data_path: /home/maiso/cbu/data
 
 # ---
 
@@ -78,6 +78,12 @@ ppd_case_weight_figure: ["$figures_folder", "PDP_case_weight.jpg"]
 ppd_cmg_figure: ["$figures_folder", "PDP_cmg.jpg"]
 ppd_acute_days_figure: ["$figures_folder", "PDP_acute_days.jpg"]
 ppd_alc_days_figure: ["$figures_folder", "PDP_alc_days.jpg"]
+
+
+
+# Guideline DTs performances
+guideline_dts_performances: ["$repository_path", "results/guideline_dts_performances.csv"]
+guidelines_dts_figures: ["$figures_folder", "guideline_dts"]
 
 
 # Permutation Feature Importance
