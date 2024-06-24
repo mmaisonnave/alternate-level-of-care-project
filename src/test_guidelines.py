@@ -234,7 +234,7 @@ class Guideline():
                         )
             
             base_name = config['guidelines_dts_figures']
-            figure_filename = f"{base_name}_{mask_name.lower().replace(' ','_')}_dt2.jpg"
+            figure_filename = f"{base_name}_{mask_name.lower().replace(' ','_')}_dt.jpg"
             io.debug(f'Saving tree in {figure_filename}')
             fig.savefig(figure_filename, bbox_inches='tight')
 
