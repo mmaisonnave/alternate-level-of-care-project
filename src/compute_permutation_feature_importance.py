@@ -27,7 +27,7 @@ from sklearn.inspection import permutation_importance
 from sklearn.metrics import roc_auc_score
 
 from imblearn.ensemble import BalancedRandomForestClassifier
-from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
+from sklearn.metrics import precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix,accuracy_score
 
 import argparse
 import sys
@@ -36,26 +36,28 @@ sys.path.append('..')
 
 from utilities import configuration
 from utilities import health_data
+from utilities import metrics
 
 
-def _get_metric_evaluations(evaluated_model, X, y_true, model_config_name, description=''):
-    y_pred = evaluated_model.predict(X)
-    y_score = evaluated_model.predict_proba(X)[:,1]
+# def _get_metric_evaluations(evaluated_model, X, y_true, model_config_name, description=''):
+#     y_pred = evaluated_model.predict(X)
+#     y_score = evaluated_model.predict_proba(X)[:,1]
 
-    tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
-    results = {'Description': description,
-                        'Precision': precision_score(y_true, y_pred),
-                        'Recal': recall_score(y_true, y_pred),
-                        'F1-Score': f1_score(y_true, y_pred),
-                        'AUC': roc_auc_score(y_true=y_true, y_score=y_score),
-                        'TN': tn,
-                        'TP': tp,
-                        'FN': fn,
-                        'FP': fp,
-                        'Model config': model_config_name
-                        }
-    results = {key: [results[key]] for key in results}
-    return pd.DataFrame(results)
+#     tn, fp, fn, tp = confusion_matrix(y_true, y_pred).ravel()
+#     results = {'Description': description,
+#                         'Accuract': accuracy_score(y_true, y_pred),
+#                         'Precision': precision_score(y_true, y_pred),
+#                         'Recal': recall_score(y_true, y_pred),
+#                         'F1-Score': f1_score(y_true, y_pred),
+#                         'AUC': roc_auc_score(y_true=y_true, y_score=y_score),
+#                         'TN': tn,
+#                         'TP': tp,
+#                         'FN': fn,
+#                         'FP': fp,
+#                         'Model config': model_config_name
+#                         }
+#     results = {key: [results[key]] for key in results}
+#     return pd.DataFrame(results)
 
 
 if __name__ == '__main__':
@@ -115,11 +117,20 @@ if __name__ == '__main__':
         print(f'Training model MODEL_CONFIGURATION_NAME={MODEL_CONFIGURATION_NAME} ...')
         brf.fit(X_train, y_train)
         print('Storing performance of new BRF model')
-        df = pd.concat([
-            _get_metric_evaluations(brf, X_train, y_train, MODEL_CONFIGURATION_NAME, description='Main BRF only cat and num (train)'),
-            _get_metric_evaluations(brf, X_test, y_test, MODEL_CONFIGURATION_NAME, description='Main BRF only cat and num (test)')
-        ])
 
+        df = pd.concat([metrics.get_metric_evaluations(brf,
+                                            X_train,
+                                            y_train,
+                                            MODEL_CONFIGURATION_NAME,
+                                            experiment_config_name=EXPERIMENT_CONFIGURATION_NAME,
+                                            description='Main BRF only cat and num (train)'
+                                            ),
+                        metrics.get_metric_evaluations(brf,
+                                            X_test,
+                                            y_test,
+                                            MODEL_CONFIGURATION_NAME,
+                                            experiment_config_name=EXPERIMENT_CONFIGURATION_NAME,
+                                            description='Main BRF only cat and num (test)')])
         
         print(df[['Precision', 'Recal', 'F1-Score', 'AUC']])
 

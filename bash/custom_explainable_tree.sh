@@ -44,8 +44,14 @@ fi
 
 
 
-MODEL_CONFIGURATION=model_345
+MODEL_CONFIGURATION=model_346
 EXPERIMENT_CONFIGURATION=configuration_93 #  #(N)+(C)+(I)+ Combined D (CD)
+
+CUSTOM_COMMAND="$PYTHON_SCRIPT --experiment-configuration=$EXPERIMENT_CONFIGURATION \
+--model-configuration=$MODEL_CONFIGURATION"
+
+echo [RUNNING] python $CUSTOM_COMMAND
+python $CUSTOM_COMMAND
 
 
 # # EXPERIMENT #1 --- GROUP I AND II (NUMERIC AND CATEGORICAL)
@@ -125,11 +131,11 @@ NC_GROUP_I_TO_III="-f acute_days \
 -f Urology"
 
 DC_GROUP_I="-f j441 \
-# -f i500 \
-# -f z515 \
-# -f Z515 \
-# -f z38000 \
-# -f 5md50aa"
+-f i500 \
+-f z515 \
+-f Z515 \
+-f z38000 \
+-f 5md50aa"
 
 NC_GROUP_I_TO_III_AND_DI_GROUP_I=$(echo $NC_GROUP_I_TO_III $DC_GROUP_I)
 NC_GROUP_I_TO_III_AND_DI_GROUP_I_DESCRIPTION=N_and_C_Group_I_to_III_and_DI

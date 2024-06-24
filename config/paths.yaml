@@ -1,14 +1,15 @@
 # ----------- #
 # MAIN PATHS: #
 # ----------- #
-repository_path: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
-data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
-# repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
-# data_path: /home/maiso/cbu/data
+# repository_path: /Users/marianomaisonnave/Repositories/alternate-level-of-care-project/
+# data_path: /Users/marianomaisonnave/Documents/CBU Postdoc/Grant Data/Merged/
+repository_path: /home/maiso/cbu/repositories/alternate-level-of-care-project
+data_path: /home/maiso/cbu/data
 
 # ---
 
 # SAVED MODELS
+checkpoint_folder: ["$repository_path", "checkpoints"]
 balanced_random_forest_path: ["$repository_path", "checkpoints/balanced_random_forest.joblib"]
 balanced_random_forest_metrics: ["$repository_path", "results/balanced_random_forest_metrics.csv"]
 
@@ -80,6 +81,8 @@ ppd_acute_days_figure: ["$figures_folder", "PDP_acute_days.jpg"]
 ppd_alc_days_figure: ["$figures_folder", "PDP_alc_days.jpg"]
 
 
+dataset_statistics_table: ["$repository_path", "results/dataset_statistics_table.csv"]
+
 
 # Guideline DTs performances
 guideline_dts_performances: ["$repository_path", "results/guideline_dts_performances.csv"]
@@ -133,6 +136,10 @@ housing_data: ["$data_path", "california-housing/housing.pickle"]
 
 experiments_config: ["$repository_path", "config/experiment_configuration.json"]
 models_config: ["$repository_path", "config/models.json"]
+
+
+
+ml_performance_on_held_out: ["$repository_path", "results/ml_performance_on_held_out.csv"]
 
 cz_files:
  - 2015/ALC Machine 2015Q1 - coded HCN.csv
